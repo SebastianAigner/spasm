@@ -17,6 +17,10 @@ import javax.swing.*;
 /**
  * Created by sebi on 26.03.16.
  */
+
+/**
+ * This is a scraping tool built to get the whole chat transcripts for a stream on twitch.
+ */
 public class Main {
     public static void main(String[] args) throws Exception {
         String link = JOptionPane.showInputDialog("Enter Twitch link");
