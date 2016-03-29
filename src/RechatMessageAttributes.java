@@ -6,4 +6,5 @@ public class RechatMessageAttributes {
     public long timestamp;
     public String message;
     public String from;
+    public long relativeTimestamp;
 }
