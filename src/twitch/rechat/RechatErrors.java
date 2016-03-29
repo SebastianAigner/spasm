@@ -1,3 +1,5 @@
+package twitch.rechat;
+
 /**
  * Created by sebi on 27.03.16.
  */

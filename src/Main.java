@@ -1,29 +1,37 @@
 import com.google.gson.Gson;
+import twitch.kraken.MatchData;
+import twitch.rechat.RechatBlock;
+import twitch.rechat.RechatErrorRequest;
+import twitch.rechat.RechatErrors;
+import twitch.rechat.RechatMessage;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.HashMap;
 import java.util.Scanner;
 import java.io.InputStream;
 import java.util.regex.*;
-import javax.swing.JFileChooser;
+import javax.swing.*;
+
 /**
  * Created by sebi on 26.03.16.
  */
 public class Main {
     public static void main(String[] args) throws Exception {
-        int DEBUG_COUNTER = 0;
-        String videoID = "v55488674";
+        String link = JOptionPane.showInputDialog("Enter Twitch link");
+        if(link == null) {
+            return;
+        }
+        String sanitizedInput = sanitzeInput(link);
+        String videoID = "v" + sanitizedInput;
         Match match = new Match();
+        match.setMatchID(sanitizedInput);
+        match.setTitle(getTitle(videoID));
         createInitialTimestamp(videoID, match);
-        HashMap messages = match.getChatMessages();
         String page;
         long timestamp = match.getStartTimestamp();
-        while (/*true*/ DEBUG_COUNTER < 10) {
-            ++DEBUG_COUNTER;
+        while (true) {
             page = fetchChat(videoID, timestamp);
             Gson gson = new Gson();
             RechatBlock r = gson.fromJson(page, RechatBlock.class);
@@ -111,6 +119,28 @@ public class Main {
         }
         match.setStartTimestamp(start);
         match.setEndTimestamp(end);
+    }
+
+    public static String sanitzeInput(String link) throws Exception {
+        Pattern linkPattern = Pattern.compile("\\/v\\/(\\d+)");
+        Matcher matcher = linkPattern.matcher(link);
+        if(matcher.find()) {
+            return matcher.group(1);
+        }
+        throw new Exception("Invalid link supplied: " + link);
+    }
+
+    public static String getTitle(String videoID) throws Exception{
+        URL url = new URL("https://api.twitch.tv/kraken/videos/" + videoID + "?on_site=1");
+        Scanner s = new Scanner(url.openStream());
+        Gson g = new Gson();
+        String file = "";
+        while(s.hasNextLine()) {
+            file += s.nextLine();
+        }
+        MatchData matchData = g.fromJson(file, MatchData.class);
+        System.out.println("Match name:" + matchData.title);
+        return matchData.title;
     }
 
 }

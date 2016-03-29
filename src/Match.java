@@ -1,3 +1,5 @@
+import twitch.rechat.RechatMessage;
+
 import java.util.HashMap;
 
 /**
@@ -5,6 +7,7 @@ import java.util.HashMap;
  */
 public class Match {
     String matchID;
+    String title;
     long startTimestamp;
     long endTimestamp;
     HashMap<String, RechatMessage> chatMessages = new HashMap<>();
@@ -40,5 +43,21 @@ public class Match {
     public float getPercentage(long timestamp) {
         float percentage = timestamp / (float)getLength() * 100;
         return percentage;
+    }
+
+    public String getMatchID() {
+        return matchID;
+    }
+
+    public void setMatchID(String matchID) {
+        this.matchID = matchID;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 }
