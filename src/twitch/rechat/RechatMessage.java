@@ -18,7 +18,7 @@ public class RechatMessage implements Comparable<RechatMessage> {
         hours = attributes.relativeTimestamp / 3600;
         minutes = (attributes.relativeTimestamp % 3600) / 60;
         seconds = (attributes.relativeTimestamp % 60);
-        return "[" + hours + ":" + minutes + ":" + seconds + "]: " + this.attributes.message;
+        return String.format("[%02d:%02d:%02d]",hours,minutes,seconds) + this.attributes.message;
     }
 
     @Override

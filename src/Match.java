@@ -10,6 +10,16 @@ public class Match {
     String title;
     long startTimestamp;
     long endTimestamp;
+    String matchLink;
+
+    public String getMatchLink() {
+        return matchLink;
+    }
+
+    public void setMatchLink(String matchLink) {
+        this.matchLink = matchLink;
+    }
+
     HashMap<String, RechatMessage> chatMessages = new HashMap<>();
 
     public long getStartTimestamp() {

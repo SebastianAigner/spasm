@@ -33,6 +33,7 @@ public class Main {
         match.setMatchID(sanitizedInput);
         match.setTitle(getTitle(videoID));
         createInitialTimestamp(videoID, match);
+        match.setMatchLink(link);
         String page;
         long timestamp = match.getStartTimestamp();
         while (true) {
