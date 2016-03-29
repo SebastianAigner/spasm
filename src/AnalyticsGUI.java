@@ -31,8 +31,8 @@ public class AnalyticsGUI {
                 analytics.openGameReport();
                 fileOpenStatus.setText(analytics.getFileOpenStatus());
                 DefaultListModel listModel = new DefaultListModel();
-                List<String> rechatMessages = analytics.getMessageList();
-                for(String message: rechatMessages) {
+                List<RechatMessage> rechatMessages = analytics.getMessageList();
+                for(RechatMessage message: rechatMessages) {
                     listModel.addElement(message);
                 }
                 messagePreviewList.setModel(listModel);
@@ -41,7 +41,7 @@ public class AnalyticsGUI {
     }
 
     public static void main(String[] args) {
-        JFrame frame = new JFrame("AnalyticsGUI");
+        JFrame frame = new JFrame("Twitch Chat Analytics");
         frame.setContentPane(new AnalyticsGUI().analyticsPanel);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();

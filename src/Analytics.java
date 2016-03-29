@@ -5,16 +5,18 @@ import javax.swing.*;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;
+import java.util.List;
 
 /**
  * Created by sebi on 29.03.16.
  */
 public class Analytics {
     Match match;
-    ArrayList<RechatMessage> chatMessages;
+    List<RechatMessage> chatMessages;
     public void openGameReport() {
         JFileChooser chooser = new JFileChooser();
         int choice = chooser.showDialog(null,"Open Game Report");
@@ -40,12 +42,8 @@ public class Analytics {
         System.out.println(chatMessages);
     }
 
-    public ArrayList<String> getMessageList() {
-        ArrayList<String> clearChatMessages = new ArrayList<>();
-        for(RechatMessage message: chatMessages) {
-            clearChatMessages.add(message.attributes.from + ": " + message.attributes.message);
-        }
-        return clearChatMessages;
+    public List<RechatMessage> getMessageList() {
+        return chatMessages;
     }
 
     public String getFileOpenStatus() {
@@ -56,5 +54,15 @@ public class Analytics {
             return "No chat messages!";
         }
         return "Opened successfully.";
+    }
+
+    public List<RechatMessage> findMessageText(String text) {
+        ArrayList<RechatMessage> results = new ArrayList<>();
+        for(RechatMessage rechatMessage: chatMessages) {
+            if(rechatMessage.attributes.message.equals(text)) {
+                results.add(rechatMessage);
+            }
+        }
+        return results;
     }
 }
