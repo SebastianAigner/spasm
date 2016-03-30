@@ -47,11 +47,11 @@ public class Match {
     }
 
     public long getLength() {
-        return endTimestamp-startTimestamp;
+        return endTimestamp - startTimestamp;
     }
 
     public float getPercentage(long timestamp) {
-        float percentage = timestamp / (float)getLength() * 100;
+        float percentage = timestamp / (float) getLength() * 100;
         return percentage;
     }
 

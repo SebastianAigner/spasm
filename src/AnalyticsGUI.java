@@ -1,6 +1,7 @@
 import twitch.rechat.RechatMessage;
 
 import javax.swing.*;
+import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
@@ -13,12 +14,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
 /**
  * Created by sebi on 29.03.16.
  */
 public class AnalyticsGUI {
     private JTextField wordCountField;
-    private JButton numberOfOcurrencesButton;
+    private JButton numberOfOccurrencesButton;
     private JButton openFileForAnalysisButton;
     private JPanel analyticsPanel;
     private JLabel fileOpenStatus;
@@ -38,19 +40,20 @@ public class AnalyticsGUI {
     private Analytics analytics = new Analytics();
 
     public AnalyticsGUI(JFrame frame) {
-        bargraphDiagram.setValues(Arrays.asList(1,2,3,4,5));
+        bargraphDiagram.setValues(Arrays.asList(1, 2, 3, 4, 5));
         this.frame = frame;
-        if(Desktop.isDesktopSupported()) {
+        if (Desktop.isDesktopSupported()) {
             desktop = Desktop.getDesktop();
         }
+
         fileOpenStatus.setText("Ready");
-        numberOfOcurrencesButton.addActionListener(new ActionListener() {
+        numberOfOccurrencesButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 currentMessageSelection = new ArrayList<RechatMessage>();
                 DefaultListModel listModel = new DefaultListModel();
                 List<RechatMessage> results = analytics.findMesasgeTextContains(wordCountField.getText(), false);
-                for(RechatMessage rechatMessage: results) {
+                for (RechatMessage rechatMessage : results) {
                     listModel.addElement(rechatMessage);
                     currentMessageSelection.add(rechatMessage);
                 }
@@ -59,6 +62,7 @@ public class AnalyticsGUI {
                 updateBargraph();
             }
         });
+
         openFileForAnalysisButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -72,49 +76,53 @@ public class AnalyticsGUI {
                 messagePreviewLabel.setText("Message Preview (" + analytics.getMessageList().size() + " total)");
             }
         });
+
         openInStreamButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                RechatMessage rechatMessage = (RechatMessage)messagePreviewList.getSelectedValue();
-                    openInBrowser(analytics.getLinkForChatMessage(rechatMessage));
+                RechatMessage rechatMessage = (RechatMessage) messagePreviewList.getSelectedValue();
+                openInBrowser(analytics.getLinkForChatMessage(rechatMessage));
 
             }
         });
+
         mostOccuringWordsList.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
-                if(e.getClickCount() == 2) {
+                if (e.getClickCount() == 2) {
                     wordCountField.setText(mostOccuringWordsList.getSelectedValue().toString());
-                    numberOfOcurrencesButton.doClick();
+                    numberOfOccurrencesButton.doClick();
 
                 }
             }
         });
+
         bargraphGranularitySlider.addChangeListener(new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent e) {
                 updateBargraph();
             }
         });
+
         bargraphDiagram.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
                 long timestamp = analytics.getTimestampForPercentage(e.getX() / (double) bargraphDiagram.getWidth());
                 currentScrubPositionLabel.setText("Current Scrub Position: " + TimestampHelper.timestampToString(timestamp));
-                if(e.getClickCount() == 2) {
+                if (e.getClickCount() == 2) {
                     openInBrowser(analytics.getLinkForPercentage(e.getX() / (double) bargraphDiagram.getWidth()));
                 }
             }
         });
+
         createReportFromLinkButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
                     ReportGenerator.createReport();
-                }
-                catch(Exception ex) {
+                } catch (Exception ex) {
 
                 }
             }
@@ -123,30 +131,40 @@ public class AnalyticsGUI {
 
     public void updateMostUsedWords() {
         DefaultListModel mostUsedWordsListModel = new DefaultListModel();
-        for(String word: analytics.getMostMessagedWords()) {
+        for (String word : analytics.getMostMessagedWords()) {
             mostUsedWordsListModel.addElement(word);
         }
         mostOccuringWordsList.setModel(mostUsedWordsListModel);
     }
 
     public void updateMessagePreviewList() {
-         DefaultListModel listModel = new DefaultListModel();
-                List<RechatMessage> rechatMessages = analytics.getMessageList();
-                currentMessageSelection = new ArrayList<>();
-                for(RechatMessage message: rechatMessages) {
-                    currentMessageSelection.add(message);
-                    listModel.addElement(message);
-                }
-                messagePreviewList.setModel(listModel);
+        DefaultListModel listModel = new DefaultListModel();
+        List<RechatMessage> rechatMessages = analytics.getMessageList();
+        currentMessageSelection = new ArrayList<>();
+        for (RechatMessage message : rechatMessages) {
+            currentMessageSelection.add(message);
+            listModel.addElement(message);
+        }
+        messagePreviewList.setModel(listModel);
     }
 
     public void updateBargraph() {
-        bargraphDiagram.setValues(analytics.getChatmessageDistribution(currentMessageSelection,bargraphGranularitySlider.getValue()));
+        bargraphDiagram.setValues(analytics.getChatmessageDistribution(currentMessageSelection, bargraphGranularitySlider.getValue()));
         bargraphMaximumLabel.setText("Maximum: " + Collections.max(bargraphDiagram.getValues()));
         bargraphDiagram.repaint();
     }
 
     public static void main(String[] args) {
+        try {
+            for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (Exception e) {
+            // If Nimbus is not available, you can set the GUI to another look and feel.
+        }
         JFrame frame = new JFrame("Twitch Chat Analytics");
         frame.setContentPane(new AnalyticsGUI(frame).analyticsPanel);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -155,11 +173,10 @@ public class AnalyticsGUI {
     }
 
     public void openInBrowser(String link) {
-                try {
-                    desktop.browse(new URI(link));
-                }
-                catch(Exception ex) {
-                    ex.printStackTrace();
-                }
+        try {
+            desktop.browse(new URI(link));
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 }
