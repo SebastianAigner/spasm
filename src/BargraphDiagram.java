@@ -17,7 +17,7 @@ public class BargraphDiagram extends JPanel{
         int panelWidth = this.getWidth();
         int panelHeight = this.getHeight();
         Graphics2D g2d = (Graphics2D) g;
-        g2d.setColor(Color.RED);
+        g2d.setColor(Color.BLUE);
         int maximum = 50;
         if(values == null) {
             values = Arrays.asList(1,2,3,4);
