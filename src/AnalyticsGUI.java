@@ -55,6 +55,7 @@ public class AnalyticsGUI {
                 }
                 messagePreviewLabel.setText("Message Preview (" + currentMessageSelection.size() + " total)");
                 messagePreviewList.setModel(listModel);
+                updateBargraph();
             }
         });
         openFileForAnalysisButton.addActionListener(new ActionListener() {
