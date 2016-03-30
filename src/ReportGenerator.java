@@ -21,8 +21,8 @@ import javax.swing.*;
 /**
  * This is a scraping tool built to get the whole chat transcripts for a stream on twitch.
  */
-public class Main {
-    public static void main(String[] args) throws Exception {
+public class ReportGenerator {
+    public static void createReport() throws Exception {
         String link = JOptionPane.showInputDialog("Enter Twitch link");
         if(link == null) {
             return;

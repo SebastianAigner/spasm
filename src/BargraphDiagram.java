@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -17,7 +18,15 @@ public class BargraphDiagram extends JPanel{
         int panelHeight = this.getHeight();
         Graphics2D g2d = (Graphics2D) g;
         g2d.setColor(Color.RED);
-        int maximum = Collections.max(values);
+        int maximum = 50;
+        if(values == null) {
+            values = Arrays.asList(1,2,3,4);
+        }
+        try {
+             maximum = Collections.max(values);
+        }
+        catch (Exception e) {
+        }
         int resolution = values.size();
         for(int i = 0; i < values.size(); ++i) {
             int startX = (int)(panelWidth/(double)resolution * i);

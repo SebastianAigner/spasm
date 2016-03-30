@@ -32,6 +32,7 @@ public class AnalyticsGUI {
     private JLabel bargraphMaximumLabel;
     private JLabel currentScrubPositionLabel;
     private JLabel messagePreviewLabel;
+    private JButton createReportFromLinkButton;
     private List<RechatMessage> currentMessageSelection;
 
     private Analytics analytics = new Analytics();
@@ -104,6 +105,17 @@ public class AnalyticsGUI {
                 currentScrubPositionLabel.setText("Current Scrub Position: " + TimestampHelper.timestampToString(timestamp));
                 if(e.getClickCount() == 2) {
                     openInBrowser(analytics.getLinkForPercentage(e.getX() / (double) bargraphDiagram.getWidth()));
+                }
+            }
+        });
+        createReportFromLinkButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    ReportGenerator.createReport();
+                }
+                catch(Exception ex) {
+
                 }
             }
         });

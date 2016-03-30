@@ -126,6 +126,14 @@
           <text value="Current Scrub Position: 00:00:00"/>
         </properties>
       </component>
+      <component id="52dd8" class="javax.swing.JButton" binding="createReportFromLinkButton" default-binding="true">
+        <constraints>
+          <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Create Report from Link"/>
+        </properties>
+      </component>
     </children>
   </grid>
 </form>
