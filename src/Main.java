@@ -41,12 +41,17 @@ public class Main {
             Gson gson = new Gson();
             RechatBlock r = gson.fromJson(page, RechatBlock.class);
             long lasttimestamp = 0;
-            for (RechatMessage rechatMessage : r.data) {
-                rechatMessage.attributes.timestamp /= 1000;
-                match.addChatMessage(rechatMessage);
-                lasttimestamp = rechatMessage.attributes.timestamp;
-                rechatMessage.attributes.relativeTimestamp = rechatMessage.attributes.timestamp - match.getStartTimestamp();
-                System.out.println("["+ String.format("%.2f",match.getPercentage(rechatMessage.attributes.relativeTimestamp)) + "%] " + rechatMessage.attributes.message);
+            if(r.data != null) {
+                for (RechatMessage rechatMessage : r.data) {
+                    rechatMessage.attributes.timestamp /= 1000;
+                    if (rechatMessage.attributes.message.equals("")) {
+                        rechatMessage.attributes.message = "<message removed>";
+                    }
+                    match.addChatMessage(rechatMessage);
+                    lasttimestamp = rechatMessage.attributes.timestamp;
+                    rechatMessage.attributes.relativeTimestamp = rechatMessage.attributes.timestamp - match.getStartTimestamp();
+                    System.out.println("[" + String.format("%.2f", match.getPercentage(rechatMessage.attributes.relativeTimestamp)) + "%] " + rechatMessage.attributes.message);
+                }
             }
             if(lasttimestamp >= match.getEndTimestamp()) {
                 break;

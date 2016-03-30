@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="AnalyticsGUI">
-  <grid id="27dc6" binding="analyticsPanel" layout-manager="GridLayoutManager" row-count="6" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+  <grid id="27dc6" binding="analyticsPanel" layout-manager="GridLayoutManager" row-count="7" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
     <margin top="5" left="5" bottom="5" right="5"/>
     <constraints>
-      <xy x="20" y="20" width="846" height="400"/>
+      <xy x="20" y="20" width="846" height="556"/>
     </constraints>
     <properties/>
     <border type="none"/>
@@ -34,15 +34,6 @@
           <text value="Open File for Analysis"/>
         </properties>
       </component>
-      <grid id="a33e1" binding="spreadDiagramPanel" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-        <margin top="0" left="0" bottom="0" right="0"/>
-        <constraints>
-          <grid row="5" column="0" row-span="1" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-        </constraints>
-        <properties/>
-        <border type="none"/>
-        <children/>
-      </grid>
       <component id="393aa" class="javax.swing.JLabel" binding="fileOpenStatus">
         <constraints>
           <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
@@ -67,7 +58,7 @@
       </scrollpane>
       <component id="eca71" class="javax.swing.JButton" binding="openInStreamButton" default-binding="true">
         <constraints>
-          <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="1" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
           <text value="Open in Stream"/>
@@ -81,7 +72,7 @@
           <text value="Most occuring words"/>
         </properties>
       </component>
-      <component id="e0bee" class="javax.swing.JLabel">
+      <component id="e0bee" class="javax.swing.JLabel" binding="messagePreviewLabel">
         <constraints>
           <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
@@ -104,6 +95,37 @@
           </component>
         </children>
       </scrollpane>
+      <component id="70f65" class="BargraphDiagram" binding="bargraphDiagram">
+        <constraints>
+          <grid row="5" column="0" row-span="1" col-span="3" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="1" use-parent-layout="false"/>
+        </constraints>
+        <properties/>
+      </component>
+      <component id="cdfc0" class="javax.swing.JSlider" binding="bargraphGranularitySlider">
+        <constraints>
+          <grid row="6" column="0" row-span="1" col-span="3" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <maximum value="300"/>
+          <minimum value="30"/>
+        </properties>
+      </component>
+      <component id="750dc" class="javax.swing.JLabel" binding="bargraphMaximumLabel">
+        <constraints>
+          <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Maximum: 0"/>
+        </properties>
+      </component>
+      <component id="4cccd" class="javax.swing.JLabel" binding="currentScrubPositionLabel">
+        <constraints>
+          <grid row="4" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Current Scrub Position: 00:00:00"/>
+        </properties>
+      </component>
     </children>
   </grid>
 </form>
