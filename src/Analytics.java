@@ -18,6 +18,12 @@ public class Analytics {
     private Broadcast broadcast;
     private List<RechatMessage> chatMessages;
 
+    public enum FileOpenStatus {
+        SUCCESS,
+        CANCEL,
+        EMPTY
+    }
+
     /**
      * Opens a game report for the current analysis session. Presents the user with a file dialog to open the file.
      */
@@ -55,14 +61,14 @@ public class Analytics {
         return chatMessages;
     }
 
-    public String getFileOpenStatus() {
+    public FileOpenStatus getFileOpenStatus() {
         if (broadcast == null) {
-            return "No file open";
+            return FileOpenStatus.CANCEL;
         }
         if (broadcast.getChatMessages() == null) {
-            return "No chat messages!";
+            return FileOpenStatus.EMPTY;
         }
-        return "Opened successfully.";
+        return FileOpenStatus.SUCCESS;
     }
 
     /**
@@ -85,9 +91,12 @@ public class Analytics {
      * @param text search text (can contain comma-delimiters)
      * @param ignoreDelimiters whether delimiters should be ignored (search for the "raw" string)
      * @param caseSensitive whether the search should be case sensitive
-     * @return list of search results
+     * @return list of search results. Null if the chat messages for the current analytics session are also null.
      */
     public List<RechatMessage> findMesasgeTextContains(String text, boolean ignoreDelimiters, boolean caseSensitive) {
+        if(chatMessages == null) {
+            return null;
+        }
         if (!caseSensitive) {
             text = text.toLowerCase();
         }
@@ -118,6 +127,9 @@ public class Analytics {
      * @return timestamped twitch video URL
      */
     public String getLinkForChatMessage(RechatMessage rechatMessage) {
+        if(rechatMessage == null) {
+            return null;
+        }
         return broadcast.getBroadcastLink() + "?t=" + rechatMessage.attributes.relativeTimestamp / 60 + "m" + rechatMessage.attributes.relativeTimestamp % 60 + "s";
     }
 
@@ -186,6 +198,9 @@ public class Analytics {
      * @return
      */
     public List<Integer> getChatmessageDistribution(List<RechatMessage> messages, int resolution) {
+        if(messages == null) {
+            return null;
+        }
         int currentBlock = 0;
         int listcounter = 0;
         ArrayList<Integer> distribution = new ArrayList<>();

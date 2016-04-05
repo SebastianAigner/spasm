@@ -60,6 +60,10 @@ public class AnalyticsGUI {
                 currentMessageSelection = new ArrayList<>();
                 DefaultListModel<RechatMessage> listModel = new DefaultListModel<>();
                 List<RechatMessage> results = analytics.findMesasgeTextContains(wordCountField.getText(), false, false);
+                if(results == null) {
+                    JOptionPane.showMessageDialog(frame, "Please open a file before searching!", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
                 for (RechatMessage rechatMessage : results) {
                     listModel.addElement(rechatMessage);
                     currentMessageSelection.add(rechatMessage);
@@ -79,7 +83,20 @@ public class AnalyticsGUI {
             @Override
             public void actionPerformed(ActionEvent e) {
                 analytics.openGameReport();
-                fileOpenStatus.setText(analytics.getFileOpenStatus());
+
+                switch (analytics.getFileOpenStatus()) {
+                    case SUCCESS:
+                        fileOpenStatus.setText("Successfully opened file.");
+                        break;
+                    case CANCEL:
+                        fileOpenStatus.setText("No file opened.");
+                        return;
+                    case EMPTY:
+                        fileOpenStatus.setText("File is empty.");
+                        break;
+                    default:
+                        return;
+                }
 
                 frame.setTitle("Analyzing " + analytics.getBroadcast().getTitle());
                 updateMostUsedWords();
@@ -97,7 +114,12 @@ public class AnalyticsGUI {
              */
             public void actionPerformed(ActionEvent e) {
                 RechatMessage rechatMessage = messagePreviewList.getSelectedValue();
-                openInBrowser(analytics.getLinkForChatMessage(rechatMessage));
+                String link = analytics.getLinkForChatMessage(rechatMessage);
+                if(link == null) {
+                    JOptionPane.showMessageDialog(frame, "Please select a link! ", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                openInBrowser(link);
 
             }
         });
@@ -111,9 +133,10 @@ public class AnalyticsGUI {
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
                 if (e.getClickCount() == 2) {
-                    wordCountField.setText(mostOccuringWordsList.getSelectedValue());
-                    findMessagesButton.doClick();
-
+                    if(mostOccuringWordsList.getSelectedValue() != null) {
+                        wordCountField.setText(mostOccuringWordsList.getSelectedValue());
+                        findMessagesButton.doClick();
+                    }
                 }
             }
         });
@@ -189,8 +212,13 @@ public class AnalyticsGUI {
      * Redraws the bargraph and updates the "maximum" indicator
      */
     public void updateBargraph() {
-        bargraphDiagram.setValues(analytics.getChatmessageDistribution(currentMessageSelection, bargraphGranularitySlider.getValue()));
-        bargraphMaximumLabel.setText("Maximum: " + Collections.max(bargraphDiagram.getValues()));
+        List<Integer> chatmessageDistribution = analytics.getChatmessageDistribution(currentMessageSelection, bargraphGranularitySlider.getValue());
+        if(chatmessageDistribution != null) {
+            bargraphDiagram.setValues(chatmessageDistribution);
+        }
+        if(bargraphDiagram.getValues() != null) {
+            bargraphMaximumLabel.setText("Maximum: " + Collections.max(bargraphDiagram.getValues()));
+        }
         bargraphDiagram.repaint();
     }
 
