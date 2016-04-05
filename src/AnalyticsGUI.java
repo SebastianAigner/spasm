@@ -24,9 +24,9 @@ public class AnalyticsGUI {
     private JButton openFileForAnalysisButton;
     private JPanel analyticsPanel;
     private JLabel fileOpenStatus;
-    private JList messagePreviewList;
+    private JList<RechatMessage> messagePreviewList;
     private JButton openInStreamButton;
-    private JList mostOccuringWordsList;
+    private JList<String> mostOccuringWordsList;
     private Desktop desktop;
     private JFrame frame;
     private BargraphDiagram bargraphDiagram;
@@ -50,7 +50,7 @@ public class AnalyticsGUI {
             @Override
             public void actionPerformed(ActionEvent e) {
                 currentMessageSelection = new ArrayList<>();
-                DefaultListModel listModel = new DefaultListModel<RechatMessage>();
+                DefaultListModel<RechatMessage> listModel = new DefaultListModel<>();
                 List<RechatMessage> results = analytics.findMesasgeTextContains(wordCountField.getText(), false, false);
                 for (RechatMessage rechatMessage : results) {
                     listModel.addElement(rechatMessage);
@@ -130,7 +130,7 @@ public class AnalyticsGUI {
     }
 
     public void updateMostUsedWords() {
-        DefaultListModel mostUsedWordsListModel = new DefaultListModel();
+        DefaultListModel<String> mostUsedWordsListModel = new DefaultListModel<>();
         for (String word : analytics.getMostMessagedWords()) {
             mostUsedWordsListModel.addElement(word);
         }
@@ -138,7 +138,7 @@ public class AnalyticsGUI {
     }
 
     public void updateMessagePreviewList() {
-        DefaultListModel listModel = new DefaultListModel();
+        DefaultListModel<RechatMessage> listModel = new DefaultListModel<>();
         List<RechatMessage> rechatMessages = analytics.getMessageList();
         currentMessageSelection = new ArrayList<>();
         for (RechatMessage message : rechatMessages) {
