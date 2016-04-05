@@ -13,7 +13,6 @@ public class BargraphDiagram extends JPanel {
     @Override
     public void paint(Graphics g) {
         super.paint(g);
-        System.out.println(values);
         int panelWidth = this.getWidth();
         int panelHeight = this.getHeight();
         Graphics2D g2d = (Graphics2D) g;
@@ -32,10 +31,8 @@ public class BargraphDiagram extends JPanel {
             int width = (int) (panelWidth / (double) resolution);
             int height = (int) (values.get(i) / (double) maximum * panelHeight);
             int startY = panelHeight - height;
-            System.out.println(startX + " " + startY + " to " + width + " " + height);
             g2d.fillRect(startX, startY, width, height);
         }
-        System.out.println(this.getSize());
     }
 
     public List<Integer> getValues() {

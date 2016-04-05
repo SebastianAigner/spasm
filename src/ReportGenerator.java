@@ -68,12 +68,10 @@ public class ReportGenerator {
         JFileChooser chooser = new JFileChooser();
         int choice = chooser.showDialog(null, "Save Game Report");
         if (choice == JFileChooser.APPROVE_OPTION) {
-            System.out.println(chooser.getSelectedFile().getName());
             File file = chooser.getSelectedFile();
             if (!file.exists()) {
                 boolean creation = file.createNewFile();
                 if (creation) {
-                    System.out.println("File created.");
                     FileOutputStream fos = new FileOutputStream(file);
                     fos.write(jsonified.getBytes());
                 }
@@ -111,9 +109,7 @@ public class ReportGenerator {
         RechatErrorRequest r = g.fromJson(errorMessage, RechatErrorRequest.class);
         RechatErrors err = r.errors.get(0);
         if (err.status == 400) {
-            System.out.println(err.detail);
             Pattern serverMessagePattern = Pattern.compile("(\\d{4,}) and (\\d{4,})");
-
             Matcher matcher = serverMessagePattern.matcher(err.detail);
             if (matcher.find()) {
                 start = Long.parseLong(matcher.group(1));
@@ -146,7 +142,6 @@ public class ReportGenerator {
             file += s.nextLine();
         }
         MatchData matchData = g.fromJson(file, MatchData.class);
-        System.out.println("Match name:" + matchData.title);
         return matchData.title;
     }
 
