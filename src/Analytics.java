@@ -61,18 +61,27 @@ public class Analytics {
         return results;
     }
 
-    public List<RechatMessage> findMesasgeTextContains(String text, boolean caseSensitive) {
+    public List<RechatMessage> findMesasgeTextContains(String text, boolean ignoreDelimiters, boolean caseSensitive) {
         if (!caseSensitive) {
             text = text.toLowerCase();
         }
-        ArrayList<RechatMessage> results = new ArrayList<>();
+        List<String> searchTerms = new ArrayList<>();
+        if(ignoreDelimiters) {
+            searchTerms.add(text);
+        }
+        else {
+            searchTerms = Arrays.asList(text.split(","));
+        }
+        List<RechatMessage> results = new ArrayList<>();
         for (RechatMessage rechatMessage : chatMessages) {
             String rechatMessageText = rechatMessage.attributes.message;
             if (!caseSensitive) {
                 rechatMessageText = rechatMessageText.toLowerCase();
             }
-            if (rechatMessageText.contains(text)) {
-                results.add(rechatMessage);
+            for(String searchTerm: searchTerms) {
+                if (rechatMessageText.contains(searchTerm)) {
+                    results.add(rechatMessage);
+                }
             }
         }
         return results;

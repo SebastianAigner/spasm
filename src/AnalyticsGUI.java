@@ -52,7 +52,7 @@ public class AnalyticsGUI {
             public void actionPerformed(ActionEvent e) {
                 currentMessageSelection = new ArrayList<RechatMessage>();
                 DefaultListModel listModel = new DefaultListModel();
-                List<RechatMessage> results = analytics.findMesasgeTextContains(wordCountField.getText(), false);
+                List<RechatMessage> results = analytics.findMesasgeTextContains(wordCountField.getText(),false, false);
                 for (RechatMessage rechatMessage : results) {
                     listModel.addElement(rechatMessage);
                     currentMessageSelection.add(rechatMessage);
