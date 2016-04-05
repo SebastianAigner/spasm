@@ -8,8 +8,10 @@ import twitch.rechat.RechatMessage;
 import javax.swing.*;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Scanner;
 import java.util.regex.Matcher;
@@ -105,10 +107,21 @@ public class ReportGenerator {
         Gson g = new Gson();
         long start;
         long end;
-        String errorMessage = fetchChat(videoID, 0);
+        String errorMessage;
+        try {
+             errorMessage = fetchChat(videoID, 0);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return;
+        }
         RechatErrorRequest r = g.fromJson(errorMessage, RechatErrorRequest.class);
         RechatErrors err = r.errors.get(0);
         if (err.status == 400) {
+            /*
+                This pattern matches on the Twitch API error message
+                "X is not between TIME_START and TIME_END"
+             */
             Pattern serverMessagePattern = Pattern.compile("(\\d{4,}) and (\\d{4,})");
             Matcher matcher = serverMessagePattern.matcher(err.detail);
             if (matcher.find()) {
@@ -133,9 +146,24 @@ public class ReportGenerator {
         throw new Exception("Invalid link supplied: " + link);
     }
 
-    public static String getTitle(String videoID) throws Exception {
-        URL url = new URL("https://api.twitch.tv/kraken/videos/" + videoID + "?on_site=1");
-        Scanner s = new Scanner(url.openStream());
+    public static String getTitle(String videoID) {
+        URL url;
+        try {
+             url = new URL("https://api.twitch.tv/kraken/videos/" + videoID + "?on_site=1");
+        }
+        catch (MalformedURLException mex) {
+            System.err.println("Could not get match title from the Twitch API!");
+            mex.printStackTrace();
+            return "Title not available!";
+        }
+        Scanner s;
+        try {
+            s = new Scanner(url.openStream());
+        }
+        catch (IOException ioex) {
+            ioex.printStackTrace();
+            return "Title not available";
+        }
         Gson g = new Gson();
         String file = "";
         while (s.hasNextLine()) {

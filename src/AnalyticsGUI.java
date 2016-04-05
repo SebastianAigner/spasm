@@ -123,6 +123,7 @@ public class AnalyticsGUI {
                     ReportGenerator.createReport();
                 } catch (Exception ex) {
                     ex.printStackTrace();
+                    JOptionPane.showMessageDialog(frame, "The report could not be created. " + ex.toString(), "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
@@ -162,11 +163,11 @@ public class AnalyticsGUI {
                 }
             }
         } catch (Exception e) {
-            // If Nimbus is not available, you can set the GUI to another look and feel.
+            // If the Nimbus styling is not available, we fall back to normal styling
         }
         JFrame frame = new JFrame("Twitch Chat Analytics");
         frame.setContentPane(new AnalyticsGUI(frame).analyticsPanel);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);
     }
@@ -176,6 +177,7 @@ public class AnalyticsGUI {
             desktop.browse(new URI(link));
         } catch (Exception ex) {
             ex.printStackTrace();
+            JOptionPane.showMessageDialog(frame, "The browser could not be started. " + ex.toString(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 }
