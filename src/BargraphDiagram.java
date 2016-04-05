@@ -9,6 +9,7 @@ import java.util.List;
  */
 public class BargraphDiagram extends JPanel {
     private List<Integer> values;
+
     //TODO: Support different colors
     @Override
     public void paint(Graphics g) {
@@ -17,14 +18,11 @@ public class BargraphDiagram extends JPanel {
         int panelHeight = this.getHeight();
         Graphics2D g2d = (Graphics2D) g;
         g2d.setColor(Color.BLUE);
-        int maximum = 50;
+        int maximum;
         if (values == null) {
-            values = Arrays.asList(1, 2, 3, 4);
+            return;
         }
-        try {
-            maximum = Collections.max(values);
-        } catch (Exception e) {
-        }
+        maximum = Collections.max(values);
         int resolution = values.size();
         for (int i = 0; i < values.size(); ++i) {
             int startX = (int) (panelWidth / (double) resolution * i);
