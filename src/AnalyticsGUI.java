@@ -173,12 +173,8 @@ public class AnalyticsGUI {
              * Open the report creation tool.
              */
             public void actionPerformed(ActionEvent e) {
-                try {
-                    ReportGenerator.createReport();
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                    JOptionPane.showMessageDialog(frame, "The report could not be created. " + ex.toString(), "Error", JOptionPane.ERROR_MESSAGE);
-                }
+                ReportGeneratorUI reportGeneratorUI = new ReportGeneratorUI();
+                reportGeneratorUI.main(null);
             }
         });
     }

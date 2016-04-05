@@ -23,25 +23,35 @@ import java.util.regex.Pattern;
  * generates JSON based reports that contain all chat messages of a broadcast as well as some metadata.
  * This component was designed as its own tool at first, but has seen integration into the analysis suite.
  */
-public class ReportGenerator {
+public class ReportGenerator extends SwingWorker<Void, Void> {
+
+    private String videoURL;
+
+    public String getVideoURL() {
+        return videoURL;
+    }
+
+    public void setVideoURL(String videoURL) {
+        this.videoURL = videoURL;
+    }
 
     /**
      * Creates a report based on a twitch video URL pasted by the user. Once the creation of the report is done,
      * prompts the user for a file to save to.
      * @throws Exception
      */
-    public static void createReport() throws Exception {
-        String link = JOptionPane.showInputDialog("Enter Twitch link");
-        if (link == null) {
-            return;
+    @Override
+    public Void doInBackground() throws Exception {
+        if (videoURL == null) {
+            return null;
         }
-        String sanitizedInput = sanitzeInput(link);
+        String sanitizedInput = sanitzeInput(videoURL);
         String videoID = "v" + sanitizedInput;
         Broadcast broadcast = new Broadcast();
         broadcast.setBroadcastID(sanitizedInput);
         broadcast.setTitle(getTitle(videoID));
         createInitialTimestamp(videoID, broadcast);
-        broadcast.setBroadcastLink(link);
+        broadcast.setBroadcastLink(videoURL);
         String page;
         long timestamp = broadcast.getStartTimestamp();
         while (true) {
@@ -58,7 +68,6 @@ public class ReportGenerator {
                 ++lasttimestamp;
                 continue;
             }
-
             if (r.data != null) {
                 for (RechatMessage rechatMessage : r.data) {
                     rechatMessage.attributes.timestamp /= 1000;
@@ -71,6 +80,7 @@ public class ReportGenerator {
                     System.out.println("[" + String.format("%.2f", broadcast.getPercentage(rechatMessage.attributes.relativeTimestamp)) + "%] " + rechatMessage.attributes.message);
                 }
             }
+            setProgress((int)broadcast.getPercentage(lasttimestamp-broadcast.getStartTimestamp()));
             if (lasttimestamp >= broadcast.getEndTimestamp()) {
                 break;
             }
@@ -97,6 +107,7 @@ public class ReportGenerator {
             System.out.println("Not saving. Dumping to console for backup.");
             System.out.println(jsonified);
         }
+        return null;
     }
 
     /**
