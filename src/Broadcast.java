@@ -53,7 +53,7 @@ public class Broadcast {
     }
 
     public float getPercentage(long timestamp) {
-        return timestamp / (float) getLength() * 100;
+        return Math.max(0, Math.min(100,timestamp / (float) getLength() * 100));
     }
 
     public String getBroadcastID() {
