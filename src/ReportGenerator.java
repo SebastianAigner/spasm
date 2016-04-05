@@ -6,10 +6,7 @@ import twitch.rechat.RechatErrors;
 import twitch.rechat.RechatMessage;
 
 import javax.swing.*;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -34,7 +31,7 @@ public class ReportGenerator {
      * @throws Exception
      */
     public static void createReport() throws Exception {
-        String link = JOptionPane.showInputDialog("Enter Twitch link", "Twitch Report Generator");
+        String link = JOptionPane.showInputDialog("Enter Twitch link");
         if (link == null) {
             return;
         }
@@ -49,9 +46,19 @@ public class ReportGenerator {
         long timestamp = broadcast.getStartTimestamp();
         while (true) {
             page = fetchChat(videoID, timestamp);
-            Gson gson = new Gson();
-            RechatBlock r = gson.fromJson(page, RechatBlock.class);
             long lasttimestamp = 0;
+            Gson gson = new Gson();
+            RechatBlock r;
+            try {
+                r = gson.fromJson(page, RechatBlock.class);
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+                System.err.println("The error occurred while fetching " + videoID + " at " + TimestampHelper.secondPrecisionTimestampToString(timestamp));
+                ++lasttimestamp;
+                continue;
+            }
+
             if (r.data != null) {
                 for (RechatMessage rechatMessage : r.data) {
                     rechatMessage.attributes.timestamp /= 1000;
