@@ -12,6 +12,10 @@ public class RechatMessage implements Comparable<RechatMessage> {
     public String id;
     public RechatMessageAttributes attributes;
 
+    /**
+     * Displays a RechatMessage as a nicely formatted String with a preluding timestamp and content.
+     * @return Timestamp and Message of the RechatMessage
+     */
     @Override
     public String toString() {
         long hours, minutes, seconds;

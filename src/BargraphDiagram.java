@@ -4,12 +4,22 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Created by sebi on 29.03.16.
+ * Created by Sebastian Aigner
+ */
+
+/**
+ * The BargraphDiagram is a simple way to display a bargraph as a JPanel. It takes a list of integer values. The bars
+ * will automatically resize in height and width based on the amount of data and the size of the window. By default,
+ * the Bargraph will be blank.
  */
 public class BargraphDiagram extends JPanel {
     private List<Integer> values;
+    //Consider supporting different colors
 
-    //TODO: Support different colors
+    /**
+     * Draws the bargraph as a JPanel.
+     * @param g Graphics
+     */
     @Override
     public void paint(Graphics g) {
         super.paint(g);
@@ -32,10 +42,18 @@ public class BargraphDiagram extends JPanel {
         }
     }
 
+    /**
+     * Get the current values that the bargraph represents
+     * @return current values
+     */
     public List<Integer> getValues() {
         return values;
     }
 
+    /**
+     * Set the values that should be displayed by the diagram. Changes will not apply until the diagram is repainted.
+     * @param values values to be drawn
+     */
     public void setValues(List<Integer> values) {
         this.values = values;
     }

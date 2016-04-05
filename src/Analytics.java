@@ -7,13 +7,22 @@ import java.io.FileNotFoundException;
 import java.util.*;
 
 /**
- * Created by sebi on 29.03.16.
+ * Created by Sebastian Aigner
+ */
+
+
+/**
+ * The analytics class provides helpful methods to analyze a game report.
  */
 public class Analytics {
-    private Match match;
+    private Broadcast broadcast;
     private List<RechatMessage> chatMessages;
 
+    /**
+     * Opens a game report for the current analysis session. Presents the user with a file dialog to open the file.
+     */
     public void openGameReport() {
+        //Consider moving this part into the actual GUI and only pass a FileInputStream here
         JFileChooser chooser = new JFileChooser();
         int choice = chooser.showDialog(null, "Open Game Report");
         if (choice == JFileChooser.CANCEL_OPTION) {
@@ -31,26 +40,35 @@ public class Analytics {
         while (s.hasNextLine()) {
             file += s.nextLine();
         }
-        match = g.fromJson(file, Match.class);
-        chatMessages = new ArrayList<>(match.getChatMessages().values());
+        broadcast = g.fromJson(file, Broadcast.class);
+        chatMessages = new ArrayList<>(broadcast.getChatMessages().values());
         Collections.sort(chatMessages);
         System.out.println(chatMessages);
     }
 
+    /**
+     * Get list of messages in the current analysis session (search filters do not apply)
+     * @return list of messages
+     */
     public List<RechatMessage> getMessageList() {
         return chatMessages;
     }
 
     public String getFileOpenStatus() {
-        if (match == null) {
+        if (broadcast == null) {
             return "No file open";
         }
-        if (match.getChatMessages() == null) {
+        if (broadcast.getChatMessages() == null) {
             return "No chat messages!";
         }
         return "Opened successfully.";
     }
 
+    /**
+     * Finds a specific message within the current analysis session
+     * @param text search text
+     * @return result RechatMessages
+     */
     public List<RechatMessage> findMessageText(String text) {
         ArrayList<RechatMessage> results = new ArrayList<>();
         for (RechatMessage rechatMessage : chatMessages) {
@@ -61,6 +79,13 @@ public class Analytics {
         return results;
     }
 
+    /**
+     * Find messages that contain one or multiple comma-seperated strings in the current analysis session.
+     * @param text search text (can contain comma-delimiters)
+     * @param ignoreDelimiters whether delimiters should be ignored (search for the "raw" string)
+     * @param caseSensitive whether the search should be case sensitive
+     * @return list of search results
+     */
     public List<RechatMessage> findMesasgeTextContains(String text, boolean ignoreDelimiters, boolean caseSensitive) {
         if (!caseSensitive) {
             text = text.toLowerCase();
@@ -86,22 +111,41 @@ public class Analytics {
         return results;
     }
 
+    /**
+     * Creates a URL for the replay of the chat message passed in
+     * @param rechatMessage message which should be used to determine the timestamp for the URL
+     * @return timestamped twitch video URL
+     */
     public String getLinkForChatMessage(RechatMessage rechatMessage) {
-        return match.getMatchLink() + "?t=" + rechatMessage.attributes.relativeTimestamp / 60 + "m" + rechatMessage.attributes.relativeTimestamp % 60 + "s";
+        return broadcast.getBroadcastLink() + "?t=" + rechatMessage.attributes.relativeTimestamp / 60 + "m" + rechatMessage.attributes.relativeTimestamp % 60 + "s";
     }
 
+    /**
+     * Creates a URL based on a twitch timestamp relative to the broadcast start
+     * @param timestamp timestamp relative to the broadcast start
+     * @return timestamped twitch video URL
+     */
     public String getLinkForTimestamp(long timestamp) {
-        return match.getMatchLink() + "?t=" + timestamp / 60 + "m" + timestamp % 60 + "s";
+        return broadcast.getBroadcastLink() + "?t=" + timestamp / 60 + "m" + timestamp % 60 + "s";
     }
 
+    /**
+     * Creates a URL based on percentage in the broadcast.
+     * @param percentage percentage to use as timestamp
+     * @return timestamped twitch video URL
+     */
     public String getLinkForPercentage(double percentage) {
-        return getLinkForTimestamp((int) (match.getLength() * percentage));
+        return getLinkForTimestamp((int) (broadcast.getLength() * percentage));
     }
 
-    public Match getMatch() {
-        return match;
+    public Broadcast getBroadcast() {
+        return broadcast;
     }
 
+    /**
+     * Get the words that have been used the most throughout the broadcast
+     * @return list of most used words in a broadcast
+     */
     public List<String> getMostMessagedWords() {
         LinkedHashMap<String, Integer> wordbank = new LinkedHashMap<>();
         for (RechatMessage rechatMessage : chatMessages) {
@@ -133,6 +177,13 @@ public class Analytics {
     }
 
 
+    /**
+     * Does a frequency analysis for the passed Rechat messages. The frequency analysis is done by grouping the messages
+     * by their timestamp in the given resolution and counting the occurrences within these groups.
+     * @param messages messages of which the frequency will be determined
+     * @param resolution amount of values to produce
+     * @return
+     */
     public List<Integer> getChatmessageDistribution(List<RechatMessage> messages, int resolution) {
         int currentBlock = 0;
         int listcounter = 0;
@@ -157,7 +208,12 @@ public class Analytics {
         return distribution;
     }
 
+    /**
+     * Creates a timestamp from a percentage in a broadcast
+     * @param percentage percentage at which the timestamp should be
+     * @return timestamp
+     */
     public long getTimestampForPercentage(double percentage) {
-        return (long) (match.getLength() * percentage);
+        return (long) (broadcast.getLength() * percentage);
     }
 }

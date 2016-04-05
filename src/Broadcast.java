@@ -3,21 +3,22 @@ import twitch.rechat.RechatMessage;
 import java.util.HashMap;
 
 /**
- * Created by sebi on 29.03.16.
+ * Created by Sebastian Aigner
  */
-public class Match {
-    private String matchID;
+
+public class Broadcast {
+    private String broadcastID;
     private String title;
     private long startTimestamp;
     private long endTimestamp;
-    private String matchLink;
+    private String broadcastLink;
 
-    public String getMatchLink() {
-        return matchLink;
+    public String getBroadcastLink() {
+        return broadcastLink;
     }
 
-    public void setMatchLink(String matchLink) {
-        this.matchLink = matchLink;
+    public void setBroadcastLink(String broadcastLink) {
+        this.broadcastLink = broadcastLink;
     }
 
     HashMap<String, RechatMessage> chatMessages = new HashMap<>();
@@ -54,12 +55,12 @@ public class Match {
         return timestamp / (float) getLength() * 100;
     }
 
-    public String getMatchID() {
-        return matchID;
+    public String getBroadcastID() {
+        return broadcastID;
     }
 
-    public void setMatchID(String matchID) {
-        this.matchID = matchID;
+    public void setBroadcastID(String broadcastID) {
+        this.broadcastID = broadcastID;
     }
 
     public String getTitle() {

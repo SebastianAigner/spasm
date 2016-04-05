@@ -1,5 +1,7 @@
-package twitch.rechat; /**
- * Created by sebi on 26.03.16.
+package twitch.rechat;
+
+/**
+ * Created by Sebastian Aigner
  */
 
 import java.util.List;

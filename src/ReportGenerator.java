@@ -1,5 +1,5 @@
 import com.google.gson.Gson;
-import twitch.kraken.MatchData;
+import twitch.kraken.BroadcastData;
 import twitch.rechat.RechatBlock;
 import twitch.rechat.RechatErrorRequest;
 import twitch.rechat.RechatErrors;
@@ -18,27 +18,35 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Created by sebi on 26.03.16.
+ * Created by Sebastian Aigner
  */
 
 /**
- * This is a scraping tool built to get the whole chat transcripts for a stream on twitch.
+ * This is the scraping component of spasm, dedicated to downloading reports from past broadcasts on twitch. It
+ * generates JSON based reports that contain all chat messages of a broadcast as well as some metadata.
+ * This component was designed as its own tool at first, but has seen integration into the analysis suite.
  */
 public class ReportGenerator {
+
+    /**
+     * Creates a report based on a twitch video URL pasted by the user. Once the creation of the report is done,
+     * prompts the user for a file to save to.
+     * @throws Exception
+     */
     public static void createReport() throws Exception {
-        String link = JOptionPane.showInputDialog("Enter Twitch link");
+        String link = JOptionPane.showInputDialog("Enter Twitch link", "Twitch Report Generator");
         if (link == null) {
             return;
         }
         String sanitizedInput = sanitzeInput(link);
         String videoID = "v" + sanitizedInput;
-        Match match = new Match();
-        match.setMatchID(sanitizedInput);
-        match.setTitle(getTitle(videoID));
-        createInitialTimestamp(videoID, match);
-        match.setMatchLink(link);
+        Broadcast broadcast = new Broadcast();
+        broadcast.setBroadcastID(sanitizedInput);
+        broadcast.setTitle(getTitle(videoID));
+        createInitialTimestamp(videoID, broadcast);
+        broadcast.setBroadcastLink(link);
         String page;
-        long timestamp = match.getStartTimestamp();
+        long timestamp = broadcast.getStartTimestamp();
         while (true) {
             page = fetchChat(videoID, timestamp);
             Gson gson = new Gson();
@@ -50,13 +58,13 @@ public class ReportGenerator {
                     if (rechatMessage.attributes.message.equals("")) {
                         rechatMessage.attributes.message = "<message removed>";
                     }
-                    match.addChatMessage(rechatMessage);
+                    broadcast.addChatMessage(rechatMessage);
                     lasttimestamp = rechatMessage.attributes.timestamp;
-                    rechatMessage.attributes.relativeTimestamp = rechatMessage.attributes.timestamp - match.getStartTimestamp();
-                    System.out.println("[" + String.format("%.2f", match.getPercentage(rechatMessage.attributes.relativeTimestamp)) + "%] " + rechatMessage.attributes.message);
+                    rechatMessage.attributes.relativeTimestamp = rechatMessage.attributes.timestamp - broadcast.getStartTimestamp();
+                    System.out.println("[" + String.format("%.2f", broadcast.getPercentage(rechatMessage.attributes.relativeTimestamp)) + "%] " + rechatMessage.attributes.message);
                 }
             }
-            if (lasttimestamp >= match.getEndTimestamp()) {
+            if (lasttimestamp >= broadcast.getEndTimestamp()) {
                 break;
             }
             if (lasttimestamp == 0 || lasttimestamp == timestamp) {
@@ -66,7 +74,7 @@ public class ReportGenerator {
             }
         }
         Gson g = new Gson();
-        String jsonified = g.toJson(match, Match.class);
+        String jsonified = g.toJson(broadcast, Broadcast.class);
         JFileChooser chooser = new JFileChooser();
         int choice = chooser.showDialog(null, "Save Game Report");
         if (choice == JFileChooser.APPROVE_OPTION) {
@@ -84,6 +92,13 @@ public class ReportGenerator {
         }
     }
 
+    /**
+     * Fetches a segment of chat for a given videoID at a given timestamp
+     * @param videoID videoID to fetch the segment from
+     * @param start timestamp from which on the messages will be fetched
+     * @return messages as delivered by the twitch API
+     * @throws Exception
+     */
     public static String fetchChat(String videoID, long start) throws Exception {
         String page = "";
 
@@ -102,8 +117,14 @@ public class ReportGenerator {
         return page;
     }
 
-
-    public static void createInitialTimestamp(String videoID, Match match) throws Exception {
+    /**
+     * Creates the initial timestamp for a broadcast by provoking an error message in the twitch API. The error message
+     * contains both start and end timestamp for the broadcast.
+     * @param videoID
+     * @param broadcast
+     * @throws Exception
+     */
+    public static void createInitialTimestamp(String videoID, Broadcast broadcast) throws Exception {
         Gson g = new Gson();
         long start;
         long end;
@@ -133,10 +154,16 @@ public class ReportGenerator {
         } else {
             throw new Exception("Server returned status code " + r.errors.get(0).status);
         }
-        match.setStartTimestamp(start);
-        match.setEndTimestamp(end);
+        broadcast.setStartTimestamp(start);
+        broadcast.setEndTimestamp(end);
     }
 
+    /**
+     * Takes a twitch past broadcast link and filters out the "/v/ID_GOES_HERE" part of the URL.
+     * @param link link to be filtered for ID
+     * @return video ID (without preluding /v/)
+     * @throws Exception
+     */
     public static String sanitzeInput(String link) throws Exception {
         Pattern linkPattern = Pattern.compile("\\/v\\/(\\d+)");
         Matcher matcher = linkPattern.matcher(link);
@@ -146,13 +173,18 @@ public class ReportGenerator {
         throw new Exception("Invalid link supplied: " + link);
     }
 
+    /**
+     * Gets the title of a broadcast from the Twitch Kraken API
+     * @param videoID videoID of which to fetch the title
+     * @return Title of the broadcast
+     */
     public static String getTitle(String videoID) {
         URL url;
         try {
              url = new URL("https://api.twitch.tv/kraken/videos/" + videoID + "?on_site=1");
         }
         catch (MalformedURLException mex) {
-            System.err.println("Could not get match title from the Twitch API!");
+            System.err.println("Could not get broadcast title from the Twitch API!");
             mex.printStackTrace();
             return "Title not available!";
         }
@@ -169,8 +201,8 @@ public class ReportGenerator {
         while (s.hasNextLine()) {
             file += s.nextLine();
         }
-        MatchData matchData = g.fromJson(file, MatchData.class);
-        return matchData.title;
+        BroadcastData broadcastData = g.fromJson(file, BroadcastData.class);
+        return broadcastData.title;
     }
 
 }

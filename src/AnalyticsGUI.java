@@ -15,11 +15,15 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Created by sebi on 29.03.16.
+ * Created by Sebastian Aigner
+ */
+
+/**
+ * The Analytics GUI is the main interface of the project. It houses message previews and other important information.
  */
 public class AnalyticsGUI {
     private JTextField wordCountField;
-    private JButton numberOfOccurrencesButton;
+    private JButton findMessagesButton;
     private JButton openFileForAnalysisButton;
     private JPanel analyticsPanel;
     private JLabel fileOpenStatus;
@@ -34,8 +38,8 @@ public class AnalyticsGUI {
     private JLabel currentScrubPositionLabel;
     private JLabel messagePreviewLabel;
     private JButton createReportFromLinkButton;
-    private List<RechatMessage> currentMessageSelection;
 
+    private List<RechatMessage> currentMessageSelection;
     private Analytics analytics = new Analytics();
 
     public AnalyticsGUI(JFrame frame) {
@@ -45,7 +49,12 @@ public class AnalyticsGUI {
         }
 
         fileOpenStatus.setText("Ready");
-        numberOfOccurrencesButton.addActionListener(new ActionListener() {
+        findMessagesButton.addActionListener(new ActionListener() {
+            /**
+             * When the button to find messages is clicked, the analytics part of the software will find the search
+             * query from the word count field. The graphs and message preview will be updated accordingly.
+             * @param e
+             */
             @Override
             public void actionPerformed(ActionEvent e) {
                 currentMessageSelection = new ArrayList<>();
@@ -62,12 +71,17 @@ public class AnalyticsGUI {
         });
 
         openFileForAnalysisButton.addActionListener(new ActionListener() {
+            /**
+             * When the users clicks the "Open File for Analysis" button, the analytics will be reinitialised with the
+             * data set opened by the user, the UI will be updated accordingly.
+             * @param e
+             */
             @Override
             public void actionPerformed(ActionEvent e) {
                 analytics.openGameReport();
                 fileOpenStatus.setText(analytics.getFileOpenStatus());
 
-                frame.setTitle("Analyzing " + analytics.getMatch().getTitle());
+                frame.setTitle("Analyzing " + analytics.getBroadcast().getTitle());
                 updateMostUsedWords();
                 updateMessagePreviewList();
                 updateBargraph();
@@ -77,6 +91,10 @@ public class AnalyticsGUI {
 
         openInStreamButton.addActionListener(new ActionListener() {
             @Override
+            /**
+             * When the user clicks the "Open in Stream" button, a new browser window will open with the past broadcast
+             * opened at the given timestamp.
+             */
             public void actionPerformed(ActionEvent e) {
                 RechatMessage rechatMessage = (RechatMessage) messagePreviewList.getSelectedValue();
                 openInBrowser(analytics.getLinkForChatMessage(rechatMessage));
@@ -86,11 +104,15 @@ public class AnalyticsGUI {
 
         mostOccuringWordsList.addMouseListener(new MouseAdapter() {
             @Override
+            /**
+             * When the user double clicks on a most occuring message, treat it the same as a selection of a message and
+             * then a click on "find messages"
+             */
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
                 if (e.getClickCount() == 2) {
                     wordCountField.setText(mostOccuringWordsList.getSelectedValue());
-                    numberOfOccurrencesButton.doClick();
+                    findMessagesButton.doClick();
 
                 }
             }
@@ -98,6 +120,9 @@ public class AnalyticsGUI {
 
         bargraphGranularitySlider.addChangeListener(new ChangeListener() {
             @Override
+            /**
+             * When the user changes the granularity of the bar graph, update the bargraph
+             */
             public void stateChanged(ChangeEvent e) {
                 updateBargraph();
             }
@@ -105,10 +130,14 @@ public class AnalyticsGUI {
 
         bargraphDiagram.addMouseListener(new MouseAdapter() {
             @Override
+            /**
+             * When the user clicks inside the barchart, preview the current scrub position. If he double-clicks,
+             * open the broadcast at the position indicated by the mouse cursor in his browser.
+             */
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
                 long timestamp = analytics.getTimestampForPercentage(e.getX() / (double) bargraphDiagram.getWidth());
-                currentScrubPositionLabel.setText("Current Scrub Position: " + TimestampHelper.timestampToString(timestamp));
+                currentScrubPositionLabel.setText("Current Scrub Position: " + TimestampHelper.secondPrecisionTimestampToString(timestamp));
                 if (e.getClickCount() == 2) {
                     openInBrowser(analytics.getLinkForPercentage(e.getX() / (double) bargraphDiagram.getWidth()));
                 }
@@ -117,6 +146,9 @@ public class AnalyticsGUI {
 
         createReportFromLinkButton.addActionListener(new ActionListener() {
             @Override
+            /**
+             * Open the report creation tool.
+             */
             public void actionPerformed(ActionEvent e) {
                 try {
                     ReportGenerator.createReport();
@@ -128,6 +160,9 @@ public class AnalyticsGUI {
         });
     }
 
+    /**
+     * Updates the visual display of the most used words.
+     */
     public void updateMostUsedWords() {
         DefaultListModel<String> mostUsedWordsListModel = new DefaultListModel<>();
         for (String word : analytics.getMostMessagedWords()) {
@@ -136,6 +171,9 @@ public class AnalyticsGUI {
         mostOccuringWordsList.setModel(mostUsedWordsListModel);
     }
 
+    /**
+     * Updates the visual display of the messages currently selected.
+     */
     public void updateMessagePreviewList() {
         DefaultListModel<RechatMessage> listModel = new DefaultListModel<>();
         List<RechatMessage> rechatMessages = analytics.getMessageList();
@@ -147,6 +185,9 @@ public class AnalyticsGUI {
         messagePreviewList.setModel(listModel);
     }
 
+    /**
+     * Redraws the bargraph and updates the "maximum" indicator
+     */
     public void updateBargraph() {
         bargraphDiagram.setValues(analytics.getChatmessageDistribution(currentMessageSelection, bargraphGranularitySlider.getValue()));
         bargraphMaximumLabel.setText("Maximum: " + Collections.max(bargraphDiagram.getValues()));
@@ -154,6 +195,7 @@ public class AnalyticsGUI {
     }
 
     public static void main(String[] args) {
+        // Try to use the "Nimbus" Look and Feel for Java. This is purely aesthetic.
         try {
             for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
@@ -171,6 +213,10 @@ public class AnalyticsGUI {
         frame.setVisible(true);
     }
 
+    /**
+     * Opens a link in the user's default browser.
+     * @param link Link to be opened
+     */
     public void openInBrowser(String link) {
         try {
             desktop.browse(new URI(link));
