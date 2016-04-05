@@ -1,6 +1,7 @@
 import twitch.rechat.RechatMessage;
 
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Sebastian Aigner
@@ -21,7 +22,7 @@ public class Broadcast {
         this.broadcastLink = broadcastLink;
     }
 
-    HashMap<String, RechatMessage> chatMessages = new HashMap<>();
+    private Map<String, RechatMessage> chatMessages = new HashMap<>();
 
     public long getStartTimestamp() {
         return startTimestamp;
@@ -39,7 +40,7 @@ public class Broadcast {
         this.endTimestamp = endTimestamp;
     }
 
-    public HashMap<String, RechatMessage> getChatMessages() {
+    public Map<String, RechatMessage> getChatMessages() {
         return chatMessages;
     }
 

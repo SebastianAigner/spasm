@@ -31,7 +31,7 @@ public class AnalyticsGUI {
     private JButton openInStreamButton;
     private JList<String> mostOccuringWordsList;
     private Desktop desktop;
-    private JFrame frame;
+    private final JFrame frame;
     private BargraphDiagram bargraphDiagram;
     private JSlider bargraphGranularitySlider;
     private JLabel bargraphMaximumLabel;
@@ -96,7 +96,7 @@ public class AnalyticsGUI {
              * opened at the given timestamp.
              */
             public void actionPerformed(ActionEvent e) {
-                RechatMessage rechatMessage = (RechatMessage) messagePreviewList.getSelectedValue();
+                RechatMessage rechatMessage = messagePreviewList.getSelectedValue();
                 openInBrowser(analytics.getLinkForChatMessage(rechatMessage));
 
             }

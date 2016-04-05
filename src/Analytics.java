@@ -30,11 +30,12 @@ public class Analytics {
         }
         Gson g = new Gson();
         String file = "";
-        FileInputStream fis = null;
+        FileInputStream fis;
         try {
             fis = new FileInputStream(chooser.getSelectedFile());
         } catch (FileNotFoundException e) {
             e.printStackTrace();
+            return;
         }
         Scanner s = new Scanner(fis);
         while (s.hasNextLine()) {
@@ -150,8 +151,8 @@ public class Analytics {
         LinkedHashMap<String, Integer> wordbank = new LinkedHashMap<>();
         for (RechatMessage rechatMessage : chatMessages) {
             String[] words = rechatMessage.attributes.message.split(" ");
-            for (int i = 0; i < words.length; ++i) {
-                String currentWord = words[i].toLowerCase();
+            for (String word : words) {
+                String currentWord = word.toLowerCase();
                 if (wordbank.containsKey(currentWord)) {
                     int currentWordCount = wordbank.get(currentWord);
                     ++currentWordCount;
