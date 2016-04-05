@@ -40,7 +40,6 @@ public class AnalyticsGUI {
     private Analytics analytics = new Analytics();
 
     public AnalyticsGUI(JFrame frame) {
-        bargraphDiagram.setValues(Arrays.asList(1, 2, 3, 4, 5));
         this.frame = frame;
         if (Desktop.isDesktopSupported()) {
             desktop = Desktop.getDesktop();
@@ -50,9 +49,9 @@ public class AnalyticsGUI {
         numberOfOccurrencesButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                currentMessageSelection = new ArrayList<RechatMessage>();
-                DefaultListModel listModel = new DefaultListModel();
-                List<RechatMessage> results = analytics.findMesasgeTextContains(wordCountField.getText(),false, false);
+                currentMessageSelection = new ArrayList<>();
+                DefaultListModel listModel = new DefaultListModel<RechatMessage>();
+                List<RechatMessage> results = analytics.findMesasgeTextContains(wordCountField.getText(), false, false);
                 for (RechatMessage rechatMessage : results) {
                     listModel.addElement(rechatMessage);
                     currentMessageSelection.add(rechatMessage);
@@ -69,7 +68,7 @@ public class AnalyticsGUI {
                 analytics.openGameReport();
                 fileOpenStatus.setText(analytics.getFileOpenStatus());
 
-                frame.setTitle("Analyzing " + analytics.getMatch().title);
+                frame.setTitle("Analyzing " + analytics.getMatch().getTitle());
                 updateMostUsedWords();
                 updateMessagePreviewList();
                 updateBargraph();
@@ -123,7 +122,7 @@ public class AnalyticsGUI {
                 try {
                     ReportGenerator.createReport();
                 } catch (Exception ex) {
-
+                    ex.printStackTrace();
                 }
             }
         });

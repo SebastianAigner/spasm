@@ -10,8 +10,8 @@ import java.util.*;
  * Created by sebi on 29.03.16.
  */
 public class Analytics {
-    Match match;
-    List<RechatMessage> chatMessages;
+    private Match match;
+    private List<RechatMessage> chatMessages;
 
     public void openGameReport() {
         JFileChooser chooser = new JFileChooser();
@@ -66,10 +66,9 @@ public class Analytics {
             text = text.toLowerCase();
         }
         List<String> searchTerms = new ArrayList<>();
-        if(ignoreDelimiters) {
+        if (ignoreDelimiters) {
             searchTerms.add(text);
-        }
-        else {
+        } else {
             searchTerms = Arrays.asList(text.split(","));
         }
         List<RechatMessage> results = new ArrayList<>();
@@ -78,7 +77,7 @@ public class Analytics {
             if (!caseSensitive) {
                 rechatMessageText = rechatMessageText.toLowerCase();
             }
-            for(String searchTerm: searchTerms) {
+            for (String searchTerm : searchTerms) {
                 if (rechatMessageText.contains(searchTerm)) {
                     results.add(rechatMessage);
                 }
