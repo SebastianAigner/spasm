@@ -11,7 +11,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -90,7 +89,7 @@ public class AnalyticsGUI {
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
                 if (e.getClickCount() == 2) {
-                    wordCountField.setText(mostOccuringWordsList.getSelectedValue().toString());
+                    wordCountField.setText(mostOccuringWordsList.getSelectedValue());
                     numberOfOccurrencesButton.doClick();
 
                 }
