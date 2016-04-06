@@ -26,12 +26,21 @@ import java.util.regex.Pattern;
 public class ReportGenerator extends SwingWorker<Void, Void> {
 
     private String videoURL;
+    private String lastMessage;
+
+    public String getLastMessage() {
+        return lastMessage;
+    }
 
     public String getVideoURL() {
         return videoURL;
     }
 
     public void setVideoURL(String videoURL) {
+        this.videoURL = videoURL;
+    }
+
+    public ReportGenerator(String videoURL) {
         this.videoURL = videoURL;
     }
 
@@ -54,7 +63,7 @@ public class ReportGenerator extends SwingWorker<Void, Void> {
         broadcast.setBroadcastLink(videoURL);
         String page;
         long timestamp = broadcast.getStartTimestamp();
-        while (true) {
+        while (!isCancelled()) {
             page = fetchChat(videoID, timestamp);
             long lasttimestamp = 0;
             Gson gson = new Gson();
@@ -78,6 +87,7 @@ public class ReportGenerator extends SwingWorker<Void, Void> {
                     lasttimestamp = rechatMessage.attributes.timestamp;
                     rechatMessage.attributes.relativeTimestamp = rechatMessage.attributes.timestamp - broadcast.getStartTimestamp();
                     System.out.println("[" + String.format("%.2f", broadcast.getPercentage(rechatMessage.attributes.relativeTimestamp)) + "%] " + rechatMessage.attributes.message);
+                    this.lastMessage = rechatMessage.attributes.message;
                 }
             }
             setProgress((int)broadcast.getPercentage(lasttimestamp-broadcast.getStartTimestamp()));

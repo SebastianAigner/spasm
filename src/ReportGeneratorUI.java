@@ -1,5 +1,3 @@
-import com.oracle.webservices.internal.api.message.PropertySet;
-
 import javax.swing.*;
 import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
@@ -9,15 +7,16 @@ public class ReportGeneratorUI extends JDialog  implements PropertyChangeListene
     private JPanel contentPane;
     private JButton buttonOK;
     private JButton buttonCancel;
-    private JProgressBar progressBar1;
-    private JTextField textField1;
+    private JProgressBar reportCreationProgressBar;
+    private JTextField urlEntryField;
+    private JLabel twitchMessageLabel;
     private ReportGenerator reportGenerator;
 
     public ReportGeneratorUI() {
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
-
+        twitchMessageLabel.setText("");
         buttonOK.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 onOK();
@@ -47,16 +46,16 @@ public class ReportGeneratorUI extends JDialog  implements PropertyChangeListene
     }
 
     private void onOK() {
-        reportGenerator = new ReportGenerator();
-        reportGenerator.setVideoURL(textField1.getText());
+        reportGenerator = new ReportGenerator(urlEntryField.getText());
         reportGenerator.addPropertyChangeListener(this);
         reportGenerator.execute();
-// add your code here
         //dispose();
     }
 
     private void onCancel() {
-// add your code here if necessary
+        if(reportGenerator != null) {
+            reportGenerator.cancel(false);
+        }
         dispose();
     }
 
@@ -66,6 +65,7 @@ public class ReportGeneratorUI extends JDialog  implements PropertyChangeListene
         dialog.setTitle("Twitch Report Generator");
         //dialog.setSize(200,200);
         dialog.setLocationRelativeTo(null);
+        dialog.setResizable(false);
         dialog.setVisible(true);
         //ReportGenerator r = new ReportGenerator();
         //System.exit(0);
@@ -76,9 +76,12 @@ public class ReportGeneratorUI extends JDialog  implements PropertyChangeListene
         if("progress" == evt.getPropertyName()) {
             int progress = (int)evt.getNewValue();
             System.out.println(progress);
-            progressBar1.setValue(progress);
-            progressBar1.setStringPainted(true);
-            progressBar1.setString(progress + "%");
+            reportCreationProgressBar.setValue(progress);
+            reportCreationProgressBar.setStringPainted(true);
+            reportCreationProgressBar.setString(progress + "%");
+            String lastMessage = reportGenerator.getLastMessage();
+            twitchMessageLabel.setText(lastMessage.length() > 30 ? lastMessage.substring(0,30): lastMessage);
+            this.pack();
         }
     }
 
