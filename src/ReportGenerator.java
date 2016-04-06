@@ -86,7 +86,6 @@ public class ReportGenerator extends SwingWorker<Void, Void> {
                     broadcast.addChatMessage(rechatMessage);
                     lasttimestamp = rechatMessage.attributes.timestamp;
                     rechatMessage.attributes.relativeTimestamp = rechatMessage.attributes.timestamp - broadcast.getStartTimestamp();
-                    System.out.println("[" + String.format("%.2f", broadcast.getPercentage(rechatMessage.attributes.relativeTimestamp)) + "%] " + rechatMessage.attributes.message);
                     this.lastMessage = rechatMessage.attributes.message;
                 }
             }

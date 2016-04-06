@@ -3,7 +3,7 @@ import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-public class ReportGeneratorUI extends JDialog  implements PropertyChangeListener, Thread.UncaughtExceptionHandler{
+public class ReportGeneratorUI extends JDialog  implements PropertyChangeListener {
     private JPanel contentPane;
     private JButton buttonOK;
     private JButton buttonCancel;
@@ -63,19 +63,15 @@ public class ReportGeneratorUI extends JDialog  implements PropertyChangeListene
         ReportGeneratorUI dialog = new ReportGeneratorUI();
         dialog.pack();
         dialog.setTitle("Twitch Report Generator");
-        //dialog.setSize(200,200);
         dialog.setLocationRelativeTo(null);
         dialog.setResizable(false);
         dialog.setVisible(true);
-        //ReportGenerator r = new ReportGenerator();
-        //System.exit(0);
     }
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if("progress" == evt.getPropertyName()) {
             int progress = (int)evt.getNewValue();
-            System.out.println(progress);
             reportCreationProgressBar.setValue(progress);
             reportCreationProgressBar.setStringPainted(true);
             reportCreationProgressBar.setString(progress + "%");
@@ -83,12 +79,5 @@ public class ReportGeneratorUI extends JDialog  implements PropertyChangeListene
             twitchMessageLabel.setText(lastMessage.length() > 30 ? lastMessage.substring(0,30): lastMessage);
             this.pack();
         }
-    }
-
-    @Override
-    public void uncaughtException(Thread t, Throwable e) {
-        t.toString();
-        e.printStackTrace();
-        e.toString();
     }
 }

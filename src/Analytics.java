@@ -50,7 +50,6 @@ public class Analytics {
         broadcast = g.fromJson(file, Broadcast.class);
         chatMessages = new ArrayList<>(broadcast.getChatMessages().values());
         Collections.sort(chatMessages);
-        System.out.println(chatMessages);
     }
 
     /**

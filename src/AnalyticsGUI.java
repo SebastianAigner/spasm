@@ -233,6 +233,7 @@ public class AnalyticsGUI {
         JFrame frame = new JFrame("Twitch Chat Analytics");
         frame.setContentPane(new AnalyticsGUI(frame).analyticsPanel);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        frame.setLocationRelativeTo(null);
         frame.pack();
         frame.setVisible(true);
     }
