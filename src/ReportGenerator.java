@@ -19,14 +19,13 @@ import java.util.regex.Pattern;
  */
 
 /**
- * This is the scraping component of spasm, dedicated to downloading reports from past broadcasts on twitch. It
- * generates JSON based reports that contain all chat messages of a broadcast as well as some metadata.
- * This component was designed as its own tool at first, but has seen integration into the analysis suite.
+ * This (originally seperate) tool allows to download twitch chat protocols. It saves them in JSON, which in return can
+ * be read by the main analytics application
  */
 public class ReportGenerator extends SwingWorker<Void, Void> {
 
     private String videoURL;
-    private String lastMessage;
+    private String lastMessage; // used for previewing messages in the UI
 
     public String getLastMessage() {
         return lastMessage;
@@ -45,8 +44,8 @@ public class ReportGenerator extends SwingWorker<Void, Void> {
     }
 
     /**
-     * Creates a report based on a twitch video URL pasted by the user. Once the creation of the report is done,
-     * prompts the user for a file to save to.
+     * Creates a report based on a twitch video URL pasted by the user in the background.
+     * Once the creation of the report is done, prompts the user for a file to save to.
      * @throws Exception
      */
     @Override
@@ -100,7 +99,7 @@ public class ReportGenerator extends SwingWorker<Void, Void> {
             }
         }
         Gson g = new Gson();
-        String jsonified = g.toJson(broadcast, Broadcast.class);
+        String resultJsonFormatted = g.toJson(broadcast, Broadcast.class);
         JFileChooser chooser = new JFileChooser();
         int choice = chooser.showDialog(null, "Save Game Report");
         if (choice == JFileChooser.APPROVE_OPTION) {
@@ -109,12 +108,12 @@ public class ReportGenerator extends SwingWorker<Void, Void> {
                 boolean creation = file.createNewFile();
                 if (creation) {
                     FileOutputStream fos = new FileOutputStream(file);
-                    fos.write(jsonified.getBytes());
+                    fos.write(resultJsonFormatted.getBytes());
                 }
             }
         } else {
             System.out.println("Not saving. Dumping to console for backup.");
-            System.out.println(jsonified);
+            System.out.println(resultJsonFormatted);
         }
         return null;
     }

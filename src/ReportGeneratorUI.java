@@ -49,7 +49,6 @@ public class ReportGeneratorUI extends JDialog  implements PropertyChangeListene
         reportGenerator = new ReportGenerator(urlEntryField.getText());
         reportGenerator.addPropertyChangeListener(this);
         reportGenerator.execute();
-        //dispose();
     }
 
     private void onCancel() {
