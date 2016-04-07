@@ -3,7 +3,7 @@
 ##Description
 Spasm is a small tool written in Java that allows you to quickly and efficiently search and spot trends in past broadcasts of channels of the livestreaming website [twitch.tv](https://www.twitch.tv/). It can create and open reports, and it shows insights about the chat behaviour over time.
 ##Usage
-To start the program, either point your favourite IDE in the direction of this project and run the Analytics GUI. Alternatively (and most likely preferrably), download the JAR file from the releases pages and, depending on your setup, double-click it or run it with ``java -jar spasm.jar``.
+To start the program, either point your favourite IDE in the direction of this project and run the Analytics GUI. Alternatively (and most likely preferrably), download the JAR file from the [here](https://github.com/SebastianAigner/spasm/releases/download/v.1.0/spasm.jar) and, depending on your setup, double-click it or run it with ``java -jar spasm.jar``.
 
 Once you have arrived at the user interface, you most likely want to **create a report from link** by pressing the corresponding button.
 
