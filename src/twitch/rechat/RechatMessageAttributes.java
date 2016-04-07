@@ -9,9 +9,9 @@ package twitch.rechat;
  * itself.
  */
 public class RechatMessageAttributes {
-    public String room;
+    //public String room;
     public long timestamp;
     public String message;
-    public String from;
+    //public String from;
     public long relativeTimestamp;
 }
