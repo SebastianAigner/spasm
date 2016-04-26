@@ -87,27 +87,35 @@ public class Analytics {
 
     /**
      * Find messages that contain one or multiple comma-seperated strings in the current analysis session.
-     * @param text search text (can contain comma-delimiters)
+     * @param searchText searchText (can contain comma-delimiters)
      * @param ignoreDelimiters whether delimiters should be ignored (search for the "raw" string)
      * @param caseSensitive whether the search should be case sensitive
+     * @param standardizeWords
      * @return list of search results. Null if the chat messages for the current analytics session are also null.
      */
-    public List<RechatMessage> findMesasgeTextContains(String text, boolean ignoreDelimiters, boolean caseSensitive) {
+    public List<RechatMessage> findMesasgeTextContains(String searchText, boolean ignoreDelimiters, boolean caseSensitive, boolean standardizeWords) {
         if(chatMessages == null) {
             return null;
         }
         if (!caseSensitive) {
-            text = text.toLowerCase();
+            searchText = searchText.toLowerCase();
+        }
+        if(standardizeWords) {
+            searchText = standardizeString(searchText);
+            System.out.println(searchText);
         }
         List<String> searchTerms = new ArrayList<>();
         if (ignoreDelimiters) {
-            searchTerms.add(text);
+            searchTerms.add(searchText);
         } else {
-            searchTerms = Arrays.asList(text.split(","));
+            searchTerms = Arrays.asList(searchText.split(","));
         }
         List<RechatMessage> results = new ArrayList<>();
         for (RechatMessage rechatMessage : chatMessages) {
             String rechatMessageText = rechatMessage.attributes.message;
+            if(standardizeWords) {
+                rechatMessageText = standardizeString(rechatMessageText);
+            }
             if (!caseSensitive) {
                 rechatMessageText = rechatMessageText.toLowerCase();
             }
@@ -161,15 +169,14 @@ public class Analytics {
     public List<String> getMostMessagedWords() {
         LinkedHashMap<String, Integer> wordbank = new LinkedHashMap<>();
         for (RechatMessage rechatMessage : chatMessages) {
-            String[] words = rechatMessage.attributes.message.split(" ");
+            String[] words = standardizeString(rechatMessage.attributes.message.toLowerCase()).split(" ");
             for (String word : words) {
-                String currentWord = word.toLowerCase();
-                if (wordbank.containsKey(currentWord)) {
-                    int currentWordCount = wordbank.get(currentWord);
+                if (wordbank.containsKey(word)) {
+                    int currentWordCount = wordbank.get(word);
                     ++currentWordCount;
-                    wordbank.put(currentWord, currentWordCount);
+                    wordbank.put(word, currentWordCount);
                 } else {
-                    wordbank.put(currentWord, 1);
+                    wordbank.put(word, 1);
                 }
             }
         }
@@ -221,6 +228,16 @@ public class Analytics {
             ++listcounter;
         }
         return distribution;
+    }
+
+    /**
+     * Standardizes a string by removing double characters. Does not change capitalization of the letters (for now),
+     * so that case-sensitive search can possibly still be added in the future.
+     * @param string String to standardize
+     * @return standardized String
+     */
+    private String standardizeString(String string) {
+        return string.replaceAll("(.)\\1", "$1");
     }
 
     /**
