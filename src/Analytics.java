@@ -102,7 +102,6 @@ public class Analytics {
         }
         if(standardizeWords) {
             searchText = standardizeString(searchText);
-            System.out.println(searchText);
         }
         List<String> searchTerms = new ArrayList<>();
         if (ignoreDelimiters) {
@@ -237,7 +236,16 @@ public class Analytics {
      * @return standardized String
      */
     private String standardizeString(String string) {
-        return string.replaceAll("(.)\\1", "$1");
+        StringBuilder stringBuilder = new StringBuilder(string.length());
+        char[] someStrings = string.toCharArray();
+        char lastChar = 0;
+        for(int i = 0; i < someStrings.length; ++i) {
+            if(someStrings[i] != lastChar) {
+                lastChar = someStrings[i];
+                stringBuilder.append(lastChar);
+            }
+        }
+        return stringBuilder.toString();
     }
 
     /**
