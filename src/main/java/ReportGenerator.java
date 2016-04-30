@@ -29,6 +29,11 @@ public class ReportGenerator extends SwingWorker<Void, Void> {
 
     private String videoURL;
     private String lastMessage; // used for previewing messages in the UI
+    private String result;
+
+    public String getResult() {
+        return result;
+    }
 
     public String getLastMessage() {
         return lastMessage;
@@ -102,22 +107,7 @@ public class ReportGenerator extends SwingWorker<Void, Void> {
             }
         }
         Gson g = new Gson();
-        String resultJsonFormatted = g.toJson(broadcast, Broadcast.class);
-        JFileChooser chooser = new JFileChooser();
-        int choice = chooser.showDialog(null, "Save Game Report");
-        if (choice == JFileChooser.APPROVE_OPTION) {
-            File file = chooser.getSelectedFile();
-            if (!file.exists()) {
-                boolean creation = file.createNewFile();
-                if (creation) {
-                    FileOutputStream fos = new FileOutputStream(file);
-                    fos.write(resultJsonFormatted.getBytes());
-                }
-            }
-        } else {
-            System.out.println("Not saving. Dumping to console for backup.");
-            System.out.println(resultJsonFormatted);
-        }
+        this.result = g.toJson(broadcast, Broadcast.class);
         return null;
     }
 

@@ -2,8 +2,10 @@ import javax.swing.*;
 import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.File;
+import java.io.FileOutputStream;
 
-public class ReportGeneratorUI extends JDialog  implements PropertyChangeListener {
+public class ReportGeneratorUI extends JDialog implements PropertyChangeListener {
     private JPanel contentPane;
     private JButton buttonOK;
     private JButton buttonCancel;
@@ -11,6 +13,7 @@ public class ReportGeneratorUI extends JDialog  implements PropertyChangeListene
     private JTextField urlEntryField;
     private JLabel twitchMessageLabel;
     private ReportGenerator reportGenerator;
+    private boolean reportGenerationDone = false;
 
     public ReportGeneratorUI() {
         setContentPane(contentPane);
@@ -52,7 +55,7 @@ public class ReportGeneratorUI extends JDialog  implements PropertyChangeListene
     }
 
     private void onCancel() {
-        if(reportGenerator != null) {
+        if (reportGenerator != null) {
             reportGenerator.cancel(false);
         }
         dispose();
@@ -69,14 +72,35 @@ public class ReportGeneratorUI extends JDialog  implements PropertyChangeListene
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        if("progress" == evt.getPropertyName()) {
-            int progress = (int)evt.getNewValue();
+        if ("progress" == evt.getPropertyName()) {
+            int progress = (int) evt.getNewValue();
             reportCreationProgressBar.setValue(progress);
             reportCreationProgressBar.setStringPainted(true);
             reportCreationProgressBar.setString(progress + "%");
             String lastMessage = reportGenerator.getLastMessage();
-            twitchMessageLabel.setText(lastMessage.length() > 30 ? lastMessage.substring(0,30): lastMessage);
+            twitchMessageLabel.setText(lastMessage.length() > 30 ? lastMessage.substring(0, 30) : lastMessage);
             this.pack();
+        }
+        if (reportGenerator.getState() == SwingWorker.StateValue.DONE && !reportGenerationDone) {
+            reportGenerationDone = true; // For some reason the "done" event gets fired twice. This fixes that issue.
+            System.out.println("It's done!");
+            JFileChooser chooser = new JFileChooser();
+            int choice = chooser.showDialog(null, "Save Game Report");
+            if (choice == JFileChooser.APPROVE_OPTION) {
+                File file = chooser.getSelectedFile();
+                if (!file.exists()) {
+                    try {
+                        boolean creation = file.createNewFile();
+                        if (creation) {
+                            FileOutputStream fos = new FileOutputStream(file);
+                            fos.write(reportGenerator.getResult().getBytes());
+                        }
+                    } catch (Exception ex) {
+                        System.out.println("Not saving. Dumping to console for backup.");
+                        System.out.println(reportGenerator.getResult());
+                    }
+                }
+            }
         }
     }
 }
