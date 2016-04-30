@@ -1,4 +1,5 @@
-#spasm - a simple twitch chat analytics tool
+#spasm - a simple twitch chat analytics tool [![Build Status](https://travis-ci.org/SebastianAigner/spasm.svg?branch=master)](https://travis-ci.org/SebastianAigner/spasm)
+
 ![screenshot](https://i.imgur.com/SFP0GAq.png "Main analysis user interface")
 ##Description
 Spasm is a small tool written in Java that allows you to quickly and efficiently search and spot trends in past broadcasts of channels of the livestreaming website [twitch.tv](https://www.twitch.tv/). It can create and open reports, and it shows insights about the chat behaviour over time.
