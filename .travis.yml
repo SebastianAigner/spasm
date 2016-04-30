@@ -1,4 +1,10 @@
 language: java
 jdk:
 - oraclejdk8
-
+deploy:
+  provider: releases
+  api_key:
+    secure: MN1pUbmLvbgRz/41ST7PBedH4iOSLV4TuIfMi8p/mtiN+0bks8qQjmmqEuxeFCSlCISkbdg2EbqjD72GWshYm6Ex5idWct/mlxjEG0DAux8mwkY3HXLX8PGaySANyLXjPeOxIyU2bv0Sv2DVLPteUi4Ecac/PC/MWJlUVYZ7IS69ZwI42Sq8SqP9X+GIuwANaHEQXjbj9+0v8bppPQwvj6/0fPDrDVnX8u+N3d038h7JN3zo7376q+tXIDPXGwdgCDsVJbYqzzwlC5GCKORex5UsX+hpNE56c8qBl3h0Lkc8itnnuh+a2uvprFHCSLUb9KGMzRihPHB0g/b1FePxeg3Aw48/b2YcMdKBu97qaAVcaq3iiXU1sZbxnjHuXPi3cc0yp4oTs5lb8bWk+l6ILqoM//gHpLyxjMjeDCYjXP4Xd7rEtufWlqxQEm2AmzVGLq7AXEvLB5MEQ/aes3Ce8UxtrXMltYv+9Ly3pEeXQZEbnjByknOwlYgRV0s/8hayUD+NcN137WJLhPiZuC8B4JT17gyLIs8YrdEmhO73rs7l0Hmc7UC6KVhz1toc9bQqct8hkL9uAKamDXvEkfVLJoHFA7ZLOvpdfc33qLqRpcpes7d9+nyJaTNyoemoIpj07F0gfpTwtGH9ZUtHEdb84kbhayTlCmUzi69nxWWJk+w=
+  file: "/target/spasm-1.0-SNAPSHOT.jar"
+  on:
+    repo: SebastianAigner/spasm
