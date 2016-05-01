@@ -1,4 +1,6 @@
-import twitch.rechat.RechatMessage;
+package io.sebi.spasm;
+
+import io.sebi.spasm.rechat.RechatMessage;
 
 import java.util.HashMap;
 import java.util.Map;

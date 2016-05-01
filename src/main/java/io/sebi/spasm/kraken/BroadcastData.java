@@ -1,4 +1,4 @@
-package twitch.kraken;
+package io.sebi.spasm.kraken;
 
 /**
  * Created by Sebastian Aigner

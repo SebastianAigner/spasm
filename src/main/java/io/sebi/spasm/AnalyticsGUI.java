@@ -1,4 +1,6 @@
-import twitch.rechat.RechatMessage;
+package io.sebi.spasm;
+
+import io.sebi.spasm.rechat.RechatMessage;
 
 import javax.swing.*;
 import javax.swing.UIManager.LookAndFeelInfo;

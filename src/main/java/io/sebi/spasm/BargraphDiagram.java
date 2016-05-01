@@ -1,3 +1,5 @@
+package io.sebi.spasm;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.Collections;

@@ -1,4 +1,4 @@
-package twitch.rechat;
+package io.sebi.spasm.rechat;
 
 /**
  * Created by Sebastian Aigner

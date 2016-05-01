@@ -1,13 +1,13 @@
+package io.sebi.spasm;
+
 import com.google.gson.Gson;
-import twitch.kraken.BroadcastData;
-import twitch.rechat.RechatBlock;
-import twitch.rechat.RechatErrorRequest;
-import twitch.rechat.RechatErrors;
-import twitch.rechat.RechatMessage;
+import io.sebi.spasm.kraken.BroadcastData;
+import io.sebi.spasm.rechat.RechatBlock;
+import io.sebi.spasm.rechat.RechatErrorRequest;
+import io.sebi.spasm.rechat.RechatErrors;
+import io.sebi.spasm.rechat.RechatMessage;
 
 import javax.swing.*;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;

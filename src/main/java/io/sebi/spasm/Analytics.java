@@ -1,9 +1,8 @@
-import com.google.gson.Gson;
-import twitch.rechat.RechatMessage;
+package io.sebi.spasm;
 
-import javax.swing.*;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import com.google.gson.Gson;
+import io.sebi.spasm.rechat.RechatMessage;
+
 import java.util.*;
 
 /**

@@ -1,4 +1,4 @@
-/**
+package io.sebi.spasm; /**
  * Created by Sebastian Aigner
  */
 
