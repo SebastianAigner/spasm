@@ -74,7 +74,7 @@ public class ReportGeneratorUI extends JDialog implements PropertyChangeListener
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        if ("progress" == evt.getPropertyName()) {
+        if ("progress".equals(evt.getPropertyName())) {
             int progress = (int) evt.getNewValue();
             reportCreationProgressBar.setValue(progress);
             reportCreationProgressBar.setStringPainted(true);

@@ -75,21 +75,22 @@ public class Analytics {
      * @param standardizeWords
      * @return list of search results. Null if the chat messages for the current analytics session are also null.
      */
-    public List<RechatMessage> findMesasgeTextContains(String searchText, boolean ignoreDelimiters, boolean caseSensitive, boolean standardizeWords) {
+    public List<RechatMessage> findMessageTextContains(String searchText, boolean ignoreDelimiters, boolean caseSensitive, boolean standardizeWords) {
+        String searchQuery = "";
         if(chatMessages == null) {
             return null;
         }
         if (!caseSensitive) {
-            searchText = searchText.toLowerCase();
+            searchQuery = searchText.toLowerCase();
         }
         if(standardizeWords) {
-            searchText = standardizeString(searchText);
+            searchQuery = standardizeString(searchText);
         }
         List<String> searchTerms = new ArrayList<>();
         if (ignoreDelimiters) {
-            searchTerms.add(searchText);
+            searchTerms.add(searchQuery);
         } else {
-            searchTerms = Arrays.asList(searchText.split(","));
+            searchTerms = Arrays.asList(searchQuery.split(","));
         }
         List<RechatMessage> results = new ArrayList<>();
         for (RechatMessage rechatMessage : chatMessages) {

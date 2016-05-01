@@ -64,7 +64,7 @@ public class AnalyticsGUI {
             public void actionPerformed(ActionEvent e) {
                 currentMessageSelection = new ArrayList<>();
                 DefaultListModel<RechatMessage> listModel = new DefaultListModel<>();
-                List<RechatMessage> results = analytics.findMesasgeTextContains(wordCountField.getText(), false, false, true);
+                List<RechatMessage> results = analytics.findMessageTextContains(wordCountField.getText(), false, false, true);
                 if (results == null) {
                     JOptionPane.showMessageDialog(frame, "Please open a file before searching!", "Error", JOptionPane.ERROR_MESSAGE);
                     return;

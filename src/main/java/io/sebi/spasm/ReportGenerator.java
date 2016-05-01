@@ -87,7 +87,7 @@ public class ReportGenerator extends SwingWorker<Void, Void> {
             if (r.data != null) {
                 for (RechatMessage rechatMessage : r.data) {
                     rechatMessage.attributes.timestamp /= 1000;
-                    if (rechatMessage.attributes.message.equals("")) {
+                    if ("".equals(rechatMessage.attributes.message)) {
                         rechatMessage.attributes.message = "<message removed>";
                     }
                     broadcast.addChatMessage(rechatMessage);
