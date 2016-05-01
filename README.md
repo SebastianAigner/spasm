@@ -1,4 +1,5 @@
-#spasm - a simple twitch chat analytics tool [![Build Status](https://travis-ci.org/SebastianAigner/spasm.svg?branch=master)](https://travis-ci.org/SebastianAigner/spasm)
+#spasm - a simple twitch chat analytics tool
+[![Build Status](https://travis-ci.org/SebastianAigner/spasm.svg?branch=master)](https://travis-ci.org/SebastianAigner/spasm) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/1ef59eb5d0d747b7886cefe4a774d7b5)](https://www.codacy.com/app/sebastian-aigner/spasm?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=SebastianAigner/spasm&amp;utm_campaign=Badge_Grade)
 
 ![screenshot](https://i.imgur.com/SFP0GAq.png "Main analysis user interface")
 ##Description
