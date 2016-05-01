@@ -9,10 +9,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Scanner;
 
 /**
  * Created by Sebastian Aigner
@@ -60,7 +63,7 @@ public class AnalyticsGUI {
                 currentMessageSelection = new ArrayList<>();
                 DefaultListModel<RechatMessage> listModel = new DefaultListModel<>();
                 List<RechatMessage> results = analytics.findMesasgeTextContains(wordCountField.getText(), false, false, true);
-                if(results == null) {
+                if (results == null) {
                     JOptionPane.showMessageDialog(frame, "Please open a file before searching!", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
@@ -82,7 +85,24 @@ public class AnalyticsGUI {
              */
             @Override
             public void actionPerformed(ActionEvent e) {
-                analytics.openGameReport();
+                JFileChooser chooser = new JFileChooser();
+                int choice = chooser.showDialog(null, "Open Game Report");
+                if (choice == JFileChooser.CANCEL_OPTION) {
+                    return;
+                }
+                String file = "";
+                FileInputStream fis;
+                try {
+                    fis = new FileInputStream(chooser.getSelectedFile());
+                } catch (FileNotFoundException ex) {
+                    ex.printStackTrace();
+                    return;
+                }
+                Scanner s = new Scanner(fis);
+                while (s.hasNextLine()) {
+                    file += s.nextLine();
+                }
+                analytics.openGameReport(file);
 
                 switch (analytics.getFileOpenStatus()) {
                     case SUCCESS:
@@ -115,7 +135,7 @@ public class AnalyticsGUI {
             public void actionPerformed(ActionEvent e) {
                 RechatMessage rechatMessage = messagePreviewList.getSelectedValue();
                 String link = analytics.getLinkForChatMessage(rechatMessage);
-                if(link == null) {
+                if (link == null) {
                     JOptionPane.showMessageDialog(frame, "Please select a link! ", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
@@ -133,7 +153,7 @@ public class AnalyticsGUI {
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
                 if (e.getClickCount() == 2) {
-                    if(mostOccuringWordsList.getSelectedValue() != null) {
+                    if (mostOccuringWordsList.getSelectedValue() != null) {
                         wordCountField.setText(mostOccuringWordsList.getSelectedValue());
                         findMessagesButton.doClick();
                     }
@@ -209,10 +229,10 @@ public class AnalyticsGUI {
      */
     public void updateBargraph() {
         List<Integer> chatmessageDistribution = analytics.getChatmessageDistribution(currentMessageSelection, bargraphGranularitySlider.getValue());
-        if(chatmessageDistribution != null) {
+        if (chatmessageDistribution != null) {
             bargraphDiagram.setValues(chatmessageDistribution);
         }
-        if(bargraphDiagram.getValues() != null) {
+        if (bargraphDiagram.getValues() != null) {
             bargraphMaximumLabel.setText("Maximum: " + Collections.max(bargraphDiagram.getValues()));
         }
         bargraphDiagram.repaint();
@@ -240,6 +260,7 @@ public class AnalyticsGUI {
 
     /**
      * Opens a link in the user's default browser.
+     *
      * @param link Link to be opened
      */
     public void openInBrowser(String link) {

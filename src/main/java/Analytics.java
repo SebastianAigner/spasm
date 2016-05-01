@@ -27,27 +27,10 @@ public class Analytics {
     /**
      * Opens a game report for the current analysis session. Presents the user with a file dialog to open the file.
      */
-    public void openGameReport() {
+    public void openGameReport(String report) {
         //Consider moving this part into the actual GUI and only pass a FileInputStream here
-        JFileChooser chooser = new JFileChooser();
-        int choice = chooser.showDialog(null, "Open Game Report");
-        if (choice == JFileChooser.CANCEL_OPTION) {
-            return;
-        }
         Gson g = new Gson();
-        String file = "";
-        FileInputStream fis;
-        try {
-            fis = new FileInputStream(chooser.getSelectedFile());
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            return;
-        }
-        Scanner s = new Scanner(fis);
-        while (s.hasNextLine()) {
-            file += s.nextLine();
-        }
-        broadcast = g.fromJson(file, Broadcast.class);
+        broadcast = g.fromJson(report, Broadcast.class);
         chatMessages = new ArrayList<>(broadcast.getChatMessages().values());
         Collections.sort(chatMessages);
     }
