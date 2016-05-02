@@ -15,6 +15,7 @@ public class Broadcast {
     private long startTimestamp;
     private long endTimestamp;
     private String broadcastLink;
+    private Map<String, RechatMessage> chatMessages = new HashMap<>();
 
     public String getBroadcastLink() {
         return broadcastLink;
@@ -23,8 +24,6 @@ public class Broadcast {
     public void setBroadcastLink(String broadcastLink) {
         this.broadcastLink = broadcastLink;
     }
-
-    private Map<String, RechatMessage> chatMessages = new HashMap<>();
 
     public long getStartTimestamp() {
         return startTimestamp;
@@ -55,7 +54,7 @@ public class Broadcast {
     }
 
     public float getPercentage(long timestamp) {
-        return Math.max(0, Math.min(100,timestamp / (float) getLength() * 100));
+        return Math.max(0, Math.min(100, timestamp / (float) getLength() * 100));
     }
 
     public String getBroadcastID() {

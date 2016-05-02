@@ -154,11 +154,9 @@ public class AnalyticsGUI {
              */
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
-                if (e.getClickCount() == 2) {
-                    if (mostOccuringWordsList.getSelectedValue() != null) {
+                if (e.getClickCount() == 2 && mostOccuringWordsList.getSelectedValue() != null) {
                         wordCountField.setText(mostOccuringWordsList.getSelectedValue());
                         findMessagesButton.doClick();
-                    }
                 }
             }
         });

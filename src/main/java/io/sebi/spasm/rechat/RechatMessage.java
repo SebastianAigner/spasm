@@ -18,7 +18,9 @@ public class RechatMessage implements Comparable<RechatMessage> {
      */
     @Override
     public String toString() {
-        long hours, minutes, seconds;
+        long hours,
+                minutes,
+                seconds;
         hours = attributes.relativeTimestamp / 3600;
         minutes = (attributes.relativeTimestamp % 3600) / 60;
         seconds = (attributes.relativeTimestamp % 60);

@@ -1,13 +1,14 @@
-import io.sebi.spasm.ReportGenerator;
+package io.sebi.spasm;
+
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
-import java.io.File;
-import org.junit.Assert;
 /**
  * Created by Sebastian Aigner.
  */
